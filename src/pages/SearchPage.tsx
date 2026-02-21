@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Search as SearchIcon, Download, RefreshCw, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
+import { sanitizeTicketHtml } from '../lib/utils';
 
 interface Chamado {
     id: string;
@@ -251,9 +252,9 @@ const SearchPage: React.FC = () => {
                                             <td><StatusBadge status={ticket.status} /></td>
                                             <td><span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span></td>
                                             <td className="text-text-secondary whitespace-nowrap">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="text-[13px] leading-relaxed text-text-secondary pr-10" dangerouslySetInnerHTML={{ __html: ticket.descricao || '' }} />
-                                            <td className="text-[13px] leading-relaxed text-emerald-700 pr-10" dangerouslySetInnerHTML={{ __html: ticket.solucao || '' }} />
-                                            <td className="text-[13px] leading-relaxed text-text-muted pr-10" dangerouslySetInnerHTML={{ __html: ticket.comentarios || '' }} />
+                                            <td className="text-[13px] leading-relaxed text-text-secondary pr-10" dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.descricao) }} />
+                                            <td className="text-[13px] leading-relaxed text-emerald-700 pr-10" dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.solucao) }} />
+                                            <td className="text-[13px] leading-relaxed text-text-muted pr-10" dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.comentarios) }} />
                                         </tr>
                                     ))
                                 ) : (
