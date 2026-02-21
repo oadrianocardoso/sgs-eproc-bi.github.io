@@ -355,15 +355,29 @@ h4,
   transition: background-color 0.15s ease;
 }
 
-/* Force ALL content inside cells to be single line for truncation */
-.table td>*,
-.table td * {
+/* Rigid cell containment */
+.cell-container {
+  height: 40px;
+  max-height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Suppress line-breaks and block formatting inside cells */
+.cell-container br {
+  display: none !important;
+}
+
+.cell-container p,
+.cell-container div,
+.cell-container span {
   display: inline !important;
   margin: 0 !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 100% !important;
 }
 
 .table tr {
