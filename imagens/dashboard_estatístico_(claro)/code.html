@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BI Dashboard - Chamados</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5b13ec",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#101622",
+                        "card-light": "#ffffff",
+                        "border-light": "#e2e8f0"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }</script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light text-slate-800 min-h-screen">
+<div class="flex flex-col min-h-screen">
+<!-- Header -->
+<header class="border-b border-border-light bg-white px-6 py-4 sticky top-0 z-50">
+<div class="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">query_stats</span>
+<h1 class="text-xl font-bold tracking-tight">BI Dashboard <span class="text-slate-500 font-medium">| Chamados</span></h1>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary font-semibold text-sm" href="#">Visão Geral</a>
+<a class="text-slate-500 hover:text-slate-300 transition-colors font-medium text-sm" href="#">Performance</a>
+<a class="text-slate-500 hover:text-slate-300 transition-colors font-medium text-sm" href="#">Equipe</a>
+</nav>
+</div>
+<div class="flex items-center gap-4 flex-1 justify-end">
+<!-- Period Selector -->
+<div class="flex items-center gap-2 bg-slate-50 border border-border-light rounded-lg px-3 py-1.5">
+<span class="material-symbols-outlined text-slate-400 text-sm">calendar_today</span>
+<span class="text-sm font-medium">01 Out, 2023 - 31 Out, 2023</span>
+<span class="material-symbols-outlined text-slate-400 text-sm cursor-pointer">expand_more</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Exportar
+                    </button>
+<div class="flex items-center gap-2 ml-2 border-l border-border-dark pl-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30 overflow-hidden">
+<img alt="User" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD--2QOWyVMMrIV0g_Qx_o8oQreRu1dgJKi2zvOXhhH7-ySmKmHZFfdgjreIp60ydnvWIEjxzr7jE5A2Wq7ZFyWacisULBCsBuzAP-cxCnstezpaOwf0C_sPjxDDValz__seBi3uUntVJJQL_hecAulZM9rksVhCHZe9fnpiXeX-YLLct323uD6i0GmR8GkuGA--Dg_hIFNDIEC8xgwbhjKgeV4Z10xWhA7u5Dx5ZGHX6sywP1LwSYcyZd4li9pkV2VTqD4IQ0Z4w"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 p-6 lg:p-10 max-w-[1440px] mx-auto w-full">
+<!-- KPIs Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"><!-- KPI 1 -->
+<div class="bg-white border border-border-light p-6 rounded-xl flex flex-col gap-2 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 font-medium text-sm">Total de Chamados</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">confirmation_number</span>
+</div>
+<div class="flex items-baseline gap-3">
+<h2 class="text-3xl font-black tracking-tight text-slate-900">1,284</h2>
+<span class="text-emerald-600 text-sm font-bold flex items-center">+12% <span class="material-symbols-outlined text-xs">trending_up</span></span>
+</div>
+<p class="text-slate-400 text-xs mt-2">Comparado ao mês anterior (1,146)</p>
+</div>
+<!-- KPI 2 -->
+<div class="bg-white border border-border-light p-6 rounded-xl flex flex-col gap-2 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 font-medium text-sm">Tempo Médio (MTTR)</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">timer</span>
+</div>
+<div class="flex items-baseline gap-3">
+<h2 class="text-3xl font-black tracking-tight text-slate-900">4h 25m</h2>
+<span class="text-orange-600 text-sm font-bold flex items-center">-5% <span class="material-symbols-outlined text-xs">trending_down</span></span>
+</div>
+<p class="text-slate-400 text-xs mt-2">Meta: Abaixo de 5h 00m</p>
+</div>
+<!-- KPI 3 -->
+<div class="bg-white border border-border-light p-6 rounded-xl flex flex-col gap-2 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 font-medium text-sm">Taxa de SLA</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">verified</span>
+</div>
+<div class="flex items-baseline gap-3">
+<h2 class="text-3xl font-black tracking-tight text-slate-900">94.2%</h2>
+<span class="text-emerald-600 text-sm font-bold flex items-center">+1.5% <span class="material-symbols-outlined text-xs">trending_up</span></span>
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full mt-2">
+<div class="bg-primary h-full rounded-full" style="width: 94.2%"></div>
+</div>
+</div></div>
+<!-- Main Charts Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Line Chart: Volume por Hora -->
+<div class="lg:col-span-8 bg-white border border-border-light p-6 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-bold text-lg">Volume de Chamados</h3>
+<p class="text-slate-500 text-xs">Distribuição por hora de criação (Média Diária)</p>
+</div>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-primary"></span> Hoje</span>
+<span class="flex items-center gap-1 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-slate-600"></span> Ontem</span>
+</div>
+</div>
+<div class="h-64 flex items-end gap-1 relative pt-6">
+<!-- Simulated Line Chart with SVG -->
+<svg class="absolute inset-0 w-full h-full pr-2" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,80 Q10,75 20,40 T40,30 T60,60 T80,20 T100,45" fill="none" stroke="#5b13ec" stroke-width="2"></path>
+<path d="M0,80 Q10,75 20,40 T40,30 T60,60 T80,20 T100,45 L100,100 L0,100 Z" fill="url(#grad1)" opacity="0.1"></path>
+<defs><lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#5b13ec;stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:#5b13ec;stop-opacity:0"></stop>
+</lineargradient></defs>
+</svg>
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between opacity-5">
+<div class="border-t border-slate-400 w-full"></div>
+<div class="border-t border-slate-400 w-full"></div>
+<div class="border-t border-slate-400 w-full"></div>
+<div class="border-t border-slate-400 w-full"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2">
+<span class="text-[10px] text-slate-500 font-bold uppercase">00:00</span>
+<span class="text-[10px] text-slate-500 font-bold uppercase">06:00</span>
+<span class="text-[10px] text-slate-500 font-bold uppercase">12:00</span>
+<span class="text-[10px] text-slate-500 font-bold uppercase">18:00</span>
+<span class="text-[10px] text-slate-500 font-bold uppercase">23:59</span>
+</div>
+</div>
+<!-- Status Chart: Pizza/Donut -->
+<div class="lg:col-span-4 bg-white border border-border-light p-6 rounded-xl flex flex-col shadow-sm">
+<h3 class="font-bold text-lg mb-6">Status dos Chamados</h3>
+<div class="relative flex-1 flex items-center justify-center py-4">
+<!-- Donut Graphic -->
+<div class="w-40 h-40 rounded-full border-[16px] border-emerald-500 flex items-center justify-center relative shadow-xl shadow-emerald-500/5">
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-transparent border-t-primary border-r-primary" style="transform: rotate(45deg);"></div>
+<div class="absolute inset-[-16px] rounded-full border-[16px] border-transparent border-b-orange-400" style="transform: rotate(-30deg);"></div>
+<div class="text-center">
+<span class="block text-2xl font-black">1.2k</span>
+<span class="block text-[10px] text-slate-500 font-bold uppercase">Total</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-6">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+<span class="text-xs font-medium">Resolvidos</span>
+<span class="text-xs text-slate-500 ml-auto">65%</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-medium">Em Curso</span>
+<span class="text-xs text-slate-500 ml-auto">20%</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-orange-400"></span>
+<span class="text-xs font-medium">Pendentes</span>
+<span class="text-xs text-slate-500 ml-auto">10%</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-slate-500"></span>
+<span class="text-xs font-medium">Abertos</span>
+<span class="text-xs text-slate-500 ml-auto">5%</span>
+</div>
+</div>
+</div>
+<!-- Bar Chart: Grupo Responsável -->
+<div class="lg:col-span-12 bg-white border border-border-light p-6 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="font-bold text-lg">Chamados por Grupo Responsável</h3>
+<p class="text-slate-500 text-xs">Carga de trabalho por departamento</p>
+</div>
+<select class="bg-white border-border-light rounded-lg text-xs py-1 px-3 focus:ring-primary">
+<option>Todos Grupos</option>
+<option>Nível 1</option>
+<option>Nível 2</option>
+</select>
+</div>
+<div class="space-y-6">
+<!-- Bar Item -->
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-slate-400 w-24">TI - Infra</span>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700/50 h-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+<span class="text-xs font-black w-10 text-right">432</span>
+</div>
+<!-- Bar Item -->
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-slate-400 w-24">RH - Admin</span>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700/50 h-3 rounded-full overflow-hidden">
+<div class="bg-primary/70 h-full rounded-full" style="width: 60%"></div>
+</div>
+<span class="text-xs font-black w-10 text-right">298</span>
+</div>
+<!-- Bar Item -->
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-slate-400 w-24">Manutenção</span>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700/50 h-3 rounded-full overflow-hidden">
+<div class="bg-primary/50 h-full rounded-full" style="width: 45%"></div>
+</div>
+<span class="text-xs font-black w-10 text-right">215</span>
+</div>
+<!-- Bar Item -->
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-slate-400 w-24">Financeiro</span>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700/50 h-3 rounded-full overflow-hidden">
+<div class="bg-primary/30 h-full rounded-full" style="width: 30%"></div>
+</div>
+<span class="text-xs font-black w-10 text-right">142</span>
+</div>
+<!-- Bar Item -->
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-slate-400 w-24">Jurídico</span>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700/50 h-3 rounded-full overflow-hidden">
+<div class="bg-primary/20 h-full rounded-full" style="width: 15%"></div>
+</div>
+<span class="text-xs font-black w-10 text-right">72</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="border-t border-border-light py-6 px-10 bg-white">
+<div class="max-w-[1440px] mx-auto flex justify-between items-center text-slate-500 text-xs font-medium">
+<p>© 2023 Ticketing Analytics Platform. All rights reserved.</p>
+<div class="flex gap-4">
+<a class="hover:text-primary transition-colors" href="#">Termos</a>
+<a class="hover:text-primary transition-colors" href="#">Privacidade</a>
+<a class="hover:text-primary transition-colors" href="#">Suporte</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

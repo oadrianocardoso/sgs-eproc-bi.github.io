@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BI System - Importação de Dados</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5b13ec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#161022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Side Navigation Bar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between py-6">
+<div class="flex flex-col gap-8">
+<!-- Logo / Brand -->
+<div class="px-6 flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div>
+<h1 class="text-slate-900 dark:text-white text-base font-bold leading-none">BI System</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Data Analytics</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">bar_chart</span>
+<span class="text-sm font-medium">Relatórios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px] fill-1">database</span>
+<span class="text-sm font-semibold">Fontes de Dados</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Configurações</span>
+</a>
+</nav>
+</div>
+<!-- User / Logout -->
+<div class="px-3">
+<div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl mb-4 flex items-center gap-3 border border-slate-100 dark:border-slate-800">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">JD</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">João Duarte</p>
+<p class="text-[10px] text-slate-500 truncate">Admin</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-sm">logout</span>
+                    Sair
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-slate-50/50 dark:bg-background-dark/50">
+<!-- Header -->
+<header class="p-8 pb-4">
+<div class="flex items-center gap-2 text-xs font-medium text-slate-500 mb-2">
+<span>Home</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">Importação de Dados</span>
+</div>
+<h2 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Importação de Dados</h2>
+<p class="text-slate-600 dark:text-slate-400 mt-1">Gerencie e envie seus arquivos de dados para processamento no sistema de BI.</p>
+</header>
+<!-- Content Grid -->
+<div class="p-8 pt-4 flex flex-col gap-8 max-w-6xl">
+<!-- Upload Section -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+<div class="flex flex-col items-center justify-center border-2 border-dashed border-primary/30 rounded-xl py-16 px-6 bg-primary/[0.02] hover:bg-primary/[0.04] transition-colors cursor-pointer group">
+<div class="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl">cloud_upload</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Arraste e solte seu arquivo aqui</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-8 text-center max-w-sm">
+                            Apenas arquivos <span class="font-bold text-slate-700 dark:text-slate-200">.csv</span> são suportados. Tamanho máximo de 50MB por arquivo.
+                        </p>
+<button class="px-8 py-3 bg-primary text-white rounded-lg font-bold text-sm shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                            Selecionar Arquivo
+                        </button>
+</div>
+<!-- Progress/Status Area (Visible during upload) -->
+<div class="mt-8 border-t border-slate-100 dark:border-slate-800 pt-6">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="text-sm font-semibold">dados_vendas_2023_q4.csv</span>
+</div>
+<span class="text-xs font-bold text-slate-500">65%</span>
+</div>
+<div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 65%;"></div>
+</div>
+<div class="flex items-center gap-2 mt-3 text-xs text-slate-500">
+<span class="material-symbols-outlined text-[16px] animate-spin">sync</span>
+                            Processando linhas e validando campos...
+                        </div>
+</div>
+</section>
+<!-- Recent Files Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Arquivos Recentes</h3>
+<button class="text-xs font-bold text-primary hover:underline">Ver Histórico Completo</button>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-500 uppercase tracking-wider">
+<tr>
+<th class="px-6 py-4">Arquivo</th>
+<th class="px-6 py-4">Data do Upload</th>
+<th class="px-6 py-4">Tamanho</th>
+<th class="px-6 py-4 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base">table_chart</span>
+</div>
+<span class="font-medium">relatorio_marketing_maio.csv</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-500">Hoje, 14:20</td>
+<td class="px-6 py-4 text-slate-500">12.4 MB</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wide">
+                                            Concluído
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base">table_chart</span>
+</div>
+<span class="font-medium">clientes_base_v3.csv</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-500">Ontem, 10:45</td>
+<td class="px-6 py-4 text-slate-500">4.2 MB</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wide">
+                                            Concluído
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base">table_chart</span>
+</div>
+<span class="font-medium">transacoes_rejeitadas.csv</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-500">12 Out, 09:12</td>
+<td class="px-6 py-4 text-slate-500">850 KB</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-[10px] font-bold uppercase tracking-wide">
+                                            Erro na Linha 14
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-base">table_chart</span>
+</div>
+<span class="font-medium">backup_old_data.csv</span>
+</div>
+</td>
+<td class="px-6 py-4 text-slate-500">10 Out, 16:30</td>
+<td class="px-6 py-4 text-slate-500">45.0 MB</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wide">
+                                            Concluído
+                                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Empty State Placeholder (hidden in this demo but logic-ready) -->
+<!-- 
+                    <div class="hidden flex flex-col items-center justify-center py-12 text-slate-400">
+                        <span class="material-symbols-outlined text-5xl mb-2">history</span>
+                        <p class="text-sm">Nenhum arquivo importado recentemente.</p>
+                    </div>
+                    -->
+</section>
+</div>
+<!-- Footer Section with Instructions -->
+<footer class="p-8 mt-auto border-t border-slate-200 dark:border-slate-800 flex gap-12 text-xs text-slate-500 leading-relaxed">
+<div class="max-w-xs">
+<p class="font-bold mb-1 text-slate-700 dark:text-slate-300">Estrutura do Arquivo</p>
+<p>Certifique-se de que seu arquivo CSV utilize separador por vírgula (,) e codificação UTF-8 para evitar erros de leitura.</p>
+</div>
+<div class="max-w-xs">
+<p class="font-bold mb-1 text-slate-700 dark:text-slate-300">Segurança de Dados</p>
+<p>Todos os arquivos são criptografados durante o envio e processados em ambiente isolado de acordo com a LGPD.</p>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

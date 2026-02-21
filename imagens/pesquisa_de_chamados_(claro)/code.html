@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BI Ticket Explorer - Sistema de Consulta de Chamados</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5b13ec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }</script>
+<style>        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        /* Custom checkbox style to match primary color */
+        input[type="checkbox"]:checked {
+            background-color: #5b13ec;
+            border-color: #5b13ec;
+        }</style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-display">
+<!-- Top Navigation Bar -->
+<header class="border-b border-slate-200 bg-white sticky top-0 z-50 backdrop-blur-md">
+<div class="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2.5">
+<div class="bg-primary rounded-lg p-1.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl">analytics</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900">BI Ticket Explorer</h1>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium text-primary border-b-2 border-primary py-5" href="#">Dashboard</a>
+<a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors py-5" href="#">Relatórios</a>
+<a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors py-5" href="#">Exportação</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:border-slate-800 mx-1"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Analista BI</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nível Admin</p>
+</div>
+<div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 max-w-[1600px] mx-auto w-full flex flex-col md:flex-row gap-6 p-6 overflow-hidden">
+<!-- Sidebar Filters -->
+<aside class="w-full md:w-72 flex-shrink-0 flex flex-col gap-6">
+<!-- Search Widget (Prominent Top) -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">search</span>
+                    Busca Avançada
+                </h3>
+<div class="relative">
+<input class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" placeholder="ID, Descrição, Especialista..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 dark:text-slate-600">search</span>
+</div>
+<button class="w-full mt-3 bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-primary/20">
+                    Pesquisar Chamados
+                </button>
+</div>
+<!-- Status Filter -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-between">
+                    Status do Chamado
+                    <button class="text-[10px] uppercase tracking-wider text-primary font-bold">Limpar</button>
+</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Aberto</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Em Atendimento</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Resolvido</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Fechado</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Cancelado</span>
+</label>
+</div>
+</div>
+<!-- Responsible Group Filter -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-between">
+                    Grupo Responsável
+                </h3>
+<div class="space-y-3 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Infraestrutura</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Suporte Nível 1</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Desenvolvimento</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Segurança da Informação</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Banco de Dados</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Recursos Humanos</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Faturamento</span>
+</label>
+</div>
+</div>
+</aside>
+<!-- Main Data Table Container -->
+<section class="flex-1 min-w-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col">
+<!-- Table Header / Actions -->
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Chamados Filtrados</span>
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">1.248 resultados</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition-all">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Exportar CSV
+                    </button>
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition-all">
+<span class="material-symbols-outlined text-sm">refresh</span>
+                        Atualizar
+                    </button>
+<button class="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition-all">
+<span class="material-symbols-outlined text-sm">settings</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Table Body -->
+<div class="flex-1 overflow-auto custom-scrollbar">
+<table class="w-full text-left border-collapse min-w-[2000px]">
+<thead class="sticky top-0 z-10 bg-slate-50 backdrop-blur-sm border-b border-slate-200">
+<tr>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-24">ID</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-44">Hora de Criação</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-48">Solicitado para</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-48">Grupo responsável</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 min-w-[300px]">Descrição</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 min-w-[300px]">Solução</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-48">Designado especialista</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-48">Grupo de Especialistas</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-40">Status Operacional</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-32">Status</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-44">Hora de fechamento</th>
+<th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 min-w-[250px]">Comentários</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-4 py-4 text-sm font-mono text-primary font-bold">#INC-9824</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-27 14:22:10</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Carlos Eduardo Silva</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Infraestrutura</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">Falha de conectividade no servidor de arquivos central...</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 italic">--</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Mariana Lopes</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Redes N3</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-amber-500/10 text-amber-500 border border-amber-500/20">Em Análise</span>
+</td>
+<td class="px-4 py-4">
+<span class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-white">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span> Aberto
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-400">--</td>
+<td class="px-4 py-4 text-sm text-slate-500 dark:text-slate-500">Aguardando logs do roteador principal.</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-4 py-4 text-sm font-mono text-primary font-bold">#INC-9821</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-27 09:15:33</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Ana Beatriz Souza</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Desenvolvimento</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">Erro 500 ao tentar gerar relatório mensal de vendas.</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">Query otimizada no banco de produção.</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Rodrigo Faro</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Sustentação ERP</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Finalizado</span>
+</td>
+<td class="px-4 py-4">
+<span class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-white">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Resolvido
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-27 16:45:00</td>
+<td class="px-4 py-4 text-sm text-slate-500 dark:text-slate-500">Cliente validou o funcionamento via Teams.</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-4 py-4 text-sm font-mono text-primary font-bold">#INC-9818</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-26 18:02:11</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Jorge Henrique</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Segurança</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">Solicitação de acesso VPN para novo colaborador externo.</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 italic">--</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Fábio Assunção</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Identity Access</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-blue-500/10 text-blue-500 border border-blue-500/20">Processando</span>
+</td>
+<td class="px-4 py-4">
+<span class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-white">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span> Em Atendimento
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-400">--</td>
+<td class="px-4 py-4 text-sm text-slate-500 dark:text-slate-500">Aprovado pelo gestor. Criando perfil no AD.</td>
+</tr>
+<!-- More placeholder rows for demonstration -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-4 py-4 text-sm font-mono text-primary font-bold">#INC-9815</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-26 11:30:45</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Luiza Trajano</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Faturamento</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">Nota fiscal com valor divergente no módulo SAP...</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 italic">--</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Giselle Bündchen</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">SAP Specialists</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-slate-500/10 text-slate-500 border border-slate-500/20">Pendente</span>
+</td>
+<td class="px-4 py-4">
+<span class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-white">
+<span class="w-2 h-2 rounded-full bg-slate-500"></span> Aberto
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-400">--</td>
+<td class="px-4 py-4 text-sm text-slate-500 dark:text-slate-500">Prioridade alta devido ao fechamento do mês.</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-4 py-4 text-sm font-mono text-primary font-bold">#INC-9810</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-25 08:00:00</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Silvio Santos</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Infraestrutura</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">Troca de toner da impressora do 5º andar.</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400 italic">Cancelado pelo usuário.</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Fausto Silva</td>
+<td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-300">Field Services</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-red-500/10 text-red-500 border border-red-500/20">Anulado</span>
+</td>
+<td class="px-4 py-4">
+<span class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-white">
+<span class="w-2 h-2 rounded-full bg-red-500"></span> Cancelado
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">2023-10-25 10:20:00</td>
+<td class="px-4 py-4 text-sm text-slate-500 dark:text-slate-500">Usuário informou que o toner foi trocado por um colega.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="text-sm text-slate-500 dark:text-slate-400 hidden sm:block">
+                    Mostrando <span class="font-bold text-slate-900 dark:text-white">1 - 25</span> de 1.248 chamados
+                </div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-800 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">first_page</span>
+</button>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-800 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex gap-1 px-2">
+<button class="w-8 h-8 rounded-lg bg-primary text-white text-sm font-bold">1</button>
+<button class="w-8 h-8 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold">2</button>
+<button class="w-8 h-8 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-slate-400">...</span>
+<button class="w-8 h-8 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-sm font-bold">50</button>
+</div>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined">last_page</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Utility -->
+<footer class="bg-white border-t border-slate-200 py-3 px-6 text-center">
+<p class="text-[10px] text-slate-400 uppercase tracking-[2px]">BI Ticket Explorer © 2023 Corporate Analytics Environment</p>
+</footer>
+</body></html>
