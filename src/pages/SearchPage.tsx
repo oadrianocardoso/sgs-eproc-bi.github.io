@@ -243,8 +243,12 @@ const SearchPage: React.FC = () => {
                                 ) : results.length > 0 ? (
                                     results.map((ticket) => (
                                         <tr key={ticket.id} className="cursor-pointer">
-                                            <td className="sticky-col pl-8">#{ticket.id}</td>
-                                            <td className="text-text-secondary whitespace-nowrap">
+                                            <td className="sticky-col pl-8">
+                                                <Tooltip text={`#${ticket.id}`}>
+                                                    #{ticket.id}
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-text-secondary">
                                                 <Tooltip text={ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}>
                                                     {ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}
                                                 </Tooltip>
@@ -284,7 +288,7 @@ const SearchPage: React.FC = () => {
                                                     <span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span>
                                                 </Tooltip>
                                             </td>
-                                            <td className="text-text-secondary whitespace-nowrap">
+                                            <td className="text-text-secondary">
                                                 <Tooltip text={ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}>
                                                     {ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}
                                                 </Tooltip>

@@ -318,6 +318,7 @@ h4,
 .table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed !important;
 }
 
 .table th {
@@ -348,19 +349,21 @@ h4,
   max-width: 300px;
   max-height: 40px;
   vertical-align: middle;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
   transition: background-color 0.15s ease;
 }
 
-/* Force HTML content inside cells to be single line for truncation */
-.table td>div,
-.table td p,
-.table td span {
+/* Force ALL content inside cells to be single line for truncation */
+.table td>*,
+.table td * {
   display: inline !important;
   margin: 0 !important;
   white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
 }
 
 .table tr {
