@@ -215,7 +215,7 @@ const SearchPage: React.FC = () => {
                         <table className="table min-w-[2800px]">
                             <thead>
                                 <tr>
-                                    <th className="sticky left-0 bg-slate-50 z-10 w-32 pl-8">ID</th>
+                                    <th className="sticky-col w-32 pl-8">ID</th>
                                     <th>Data de Criação</th>
                                     <th>Solicitante</th>
                                     <th>Grupo Principal</th>
@@ -242,8 +242,8 @@ const SearchPage: React.FC = () => {
                                     ))
                                 ) : results.length > 0 ? (
                                     results.map((ticket) => (
-                                        <tr key={ticket.id}>
-                                            <td className="sticky left-0 bg-white font-bold text-primary-600 border-r border-slate-50 z-10 p-4 pl-8">#{ticket.id}</td>
+                                        <tr key={ticket.id} className="cursor-pointer">
+                                            <td className="sticky-col pl-8">#{ticket.id}</td>
                                             <td className="text-text-secondary whitespace-nowrap">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
                                             <td className="font-semibold text-text-primary uppercase">
                                                 <Tooltip text={ticket.solicitado_para}>
