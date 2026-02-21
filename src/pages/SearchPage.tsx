@@ -11,6 +11,12 @@ interface Chamado {
     descricao: string;
     solucao: string;
     status: string;
+    designado_especialista: string;
+    grupo_especialistas: string;
+    status_operacional: string;
+    status_agrupado: string;
+    hora_fechamento: string;
+    comentarios: string;
     total_count?: number;
 }
 
@@ -192,47 +198,66 @@ const SearchPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="glass-card overflow-hidden shadow-xl shadow-slate-200/20">
-                    <div className="table-container border-none rounded-none">
-                        <table className="table">
+                <div className="glass-card shadow-xl shadow-slate-200/20 overflow-hidden border-none">
+                    <div className="overflow-x-auto custom-scrollbar">
+                        <table className="table min-w-[2800px]">
                             <thead>
-                                <tr>
-                                    <th className="font-mono">TICKET</th>
-                                    <th>DATA</th>
+                                <tr className="bg-slate-50/50">
+                                    <th className="font-mono sticky left-0 bg-slate-50 z-10 py-5 pl-8">TICKET</th>
+                                    <th>CRIADO EM</th>
                                     <th>SOLICITANTE</th>
-                                    <th>GRUPO</th>
-                                    <th>STATUS</th>
-                                    <th>RESUMO</th>
+                                    <th>GRUPO RESPONSÁVEL</th>
+                                    <th>ESPECIALISTA</th>
+                                    <th>GRUPO ESPECIALISTA</th>
+                                    <th>STATUS OPERACIONAL</th>
+                                    <th>STATUS FINAL</th>
+                                    <th>STATUS AGRUPADO</th>
+                                    <th>FECHADO EM</th>
+                                    <th className="min-w-[400px]">DESCRIÇÃO</th>
+                                    <th className="min-w-[400px]">SOLUÇÃO</th>
+                                    <th className="min-w-[400px]">COMENTÁRIOS</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
                                     [...Array(pageSize)].map((_, i) => (
                                         <tr key={i}>
-                                            {[...Array(6)].map((_, j) => (
-                                                <td key={j} className="animate-pulse py-6"><div className="h-3 bg-slate-100 rounded-full w-full"></div></td>
+                                            <td className="sticky left-0 bg-white"><div className="h-4 bg-slate-100 rounded-full w-16 animate-pulse"></div></td>
+                                            {[...Array(12)].map((_, j) => (
+                                                <td key={j} className="animate-pulse py-6"><div className="h-3 bg-slate-50 rounded-full w-full"></div></td>
                                             ))}
                                         </tr>
                                     ))
                                 ) : results.length > 0 ? (
                                     results.map((ticket) => (
-                                        <tr key={ticket.id} className="group transition-colors hover:bg-slate-50/50">
-                                            <td className="font-mono font-black text-primary-500 text-[11px]">#{ticket.id}</td>
-                                            <td className="text-[10px] font-bold text-text-secondary uppercase">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleDateString() : '-'}</td>
-                                            <td className="text-[11px] font-black text-text-primary uppercase tracking-tight truncate max-w-[120px]">{ticket.solicitado_para}</td>
-                                            <td className="text-[10px] font-bold text-text-muted uppercase truncate max-w-[120px]">{ticket.grupo_responsavel}</td>
+                                        <tr key={ticket.id} className="group transition-colors hover:bg-slate-50/20 text-[10.5px]">
+                                            <td className="font-mono font-black text-primary-500 sticky left-0 bg-white z-10 group-hover:bg-slate-50 transition-colors pl-8">#{ticket.id}</td>
+                                            <td className="font-bold text-text-secondary uppercase">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
+                                            <td className="font-black text-text-primary uppercase tracking-tight truncate max-w-[200px]">{ticket.solicitado_para}</td>
+                                            <td className="font-bold text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_responsavel}</td>
+                                            <td className="font-black text-primary-600 uppercase truncate max-w-[200px]">{ticket.designado_especialista || '-'}</td>
+                                            <td className="font-bold text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_especialistas || '-'}</td>
+                                            <td><span className="px-2 py-1 rounded bg-slate-50 text-[9px] font-black uppercase text-slate-500 whitespace-nowrap">{ticket.status_operacional}</span></td>
                                             <td><StatusBadge status={ticket.status} /></td>
-                                            <td className="max-w-[250px] py-4 pr-6">
-                                                <p className="text-[11px] font-medium text-text-secondary line-clamp-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: ticket.descricao || '' }} />
+                                            <td><span className="px-2 py-1 rounded bg-primary-50 text-[9px] font-black uppercase text-primary-600 whitespace-nowrap">{ticket.status_agrupado}</span></td>
+                                            <td className="font-bold text-text-secondary uppercase">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
+                                            <td className="max-w-[400px] py-4 pr-10">
+                                                <p className="font-medium text-text-secondary line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity" dangerouslySetInnerHTML={{ __html: ticket.descricao || '' }} />
+                                            </td>
+                                            <td className="max-w-[400px] py-4 pr-10">
+                                                <p className="font-medium text-emerald-700 line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity" dangerouslySetInnerHTML={{ __html: ticket.solucao || '' }} />
+                                            </td>
+                                            <td className="max-w-[400px] py-4 pr-10">
+                                                <p className="font-medium text-text-muted line-clamp-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: ticket.comentarios || '' }} />
                                             </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={6} className="text-center py-40">
+                                        <td colSpan={13} className="text-center py-40">
                                             <div className="flex flex-col items-center gap-4 opacity-20">
                                                 <SearchIcon size={48} />
-                                                <p className="font-black text-[10px] uppercase tracking-[0.3em]">Nada encontrado</p>
+                                                <p className="font-black text-[10px] uppercase tracking-[0.3em]">Nenhum registro encontrado</p>
                                             </div>
                                         </td>
                                     </tr>
