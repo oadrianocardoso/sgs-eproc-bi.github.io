@@ -8,53 +8,63 @@ interface KPICardProps {
     icon: React.ReactNode;
     subtitle?: string;
     loading?: boolean;
+    showProgress?: boolean;
+    progressValue?: number;
 }
 
-const KPICard: React.FC<KPICardProps> = ({ title, value, trend, icon, subtitle, loading }) => {
+const KPICard: React.FC<KPICardProps> = ({ title, value, trend, icon, subtitle, loading, showProgress, progressValue }) => {
     const isPositive = trend && trend > 0;
 
     if (loading) {
         return (
-            <div className="glass-card p-6 animate-pulse">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-slate-100 rounded-2xl"></div>
-                    <div className="w-16 h-4 bg-slate-100 rounded-full"></div>
+            <div className="bento-card p-6 animate-pulse">
+                <div className="flex justify-between items-start mb-4">
+                    <div className="w-24 h-4 bg-slate-100 rounded"></div>
+                    <div className="w-10 h-10 bg-slate-100 rounded-lg"></div>
                 </div>
-                <div className="w-1/2 h-8 bg-slate-100 rounded-lg mb-2"></div>
-                <div className="w-3/4 h-3 bg-slate-100 rounded-full"></div>
+                <div className="w-20 h-8 bg-slate-100 rounded-lg mb-2"></div>
+                <div className="w-full h-3 bg-slate-100 rounded-full"></div>
             </div>
         );
     }
 
     return (
-        <div className="glass-card p-6 animate-premium-in group relative overflow-hidden">
-            <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-primary-50 text-primary-500 rounded-2xl flex items-center justify-center shadow-inner transition-transform duration-300 group-hover:scale-110">
-                    {icon}
-                </div>
-                {trend !== undefined && (
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-tight ${isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                        }`}>
-                        {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                        {Math.abs(trend)}%
+        <div className="bento-card group flex flex-col justify-between h-full animate-fade-in relative overflow-hidden">
+            <div>
+                <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{title}</h3>
+                    <div className="w-10 h-10 bg-primary-100 text-primary-600 rounded-lg flex items-center justify-center">
+                        {icon}
                     </div>
-                )}
-            </div>
+                </div>
 
-            <div className="space-y-1">
-                <h3 className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{title}</h3>
-                <p className="text-3xl font-mono font-black text-text-primary tracking-tighter leading-none">
-                    {value}
-                </p>
+                <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-3xl font-bold text-text-primary tracking-tight font-heading">{value}</span>
+                    {trend !== undefined && (
+                        <div className={`flex items-center gap-0.5 text-[11px] font-bold ${isPositive ? 'text-success' : 'text-danger'}`}>
+                            {isPositive ? '+' : ''}{trend}%
+                            {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                        </div>
+                    )}
+                </div>
+
                 {subtitle && (
-                    <p className="text-[10px] text-text-muted font-medium mt-2 leading-relaxed">
+                    <p className="text-[11px] text-text-muted font-medium">
                         {subtitle}
                     </p>
                 )}
             </div>
 
-            {/* Decorative gradient corner */}
-            <div className="absolute -bottom-2 -right-2 w-16 h-16 bg-primary-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            {showProgress && progressValue !== undefined && (
+                <div className="mt-6">
+                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-primary-500 rounded-full transition-all duration-1000"
+                            style={{ width: `${progressValue}%` }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

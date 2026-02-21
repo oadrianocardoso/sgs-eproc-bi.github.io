@@ -1,58 +1,91 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Bell, Search, Globe, ChevronRight } from 'lucide-react';
+import { Bell, User, Globe, ChevronRight, Calendar } from 'lucide-react';
 
 const Layout: React.FC = () => {
+    const location = useLocation();
+
+    // Breadcrumbs based on path
+    const getPathLabel = () => {
+        switch (location.pathname) {
+            case '/dashboard': return 'Visão Geral';
+            case '/search': return 'Relatórios';
+            case '/upload': return 'Importação de Dados';
+            default: return 'Início';
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-slate-50 flex font-sans">
-            {/* Sidebar passes its own fixed positioning */}
+        <div className="flex bg-slate-50 min-h-screen">
             <Sidebar />
 
-            <main className="flex-1 ml-80 p-8 min-w-0">
-                {/* Header */}
-                <header className="flex items-center justify-between mb-8 animate-fade-in">
-                    <div className="flex items-center gap-3 text-sm font-bold text-text-muted">
-                        <span className="hover:text-primary-500 cursor-pointer transition-colors">Sistema</span>
-                        <ChevronRight size={14} />
-                        <span className="text-text-primary uppercase tracking-widest text-[10px] font-black">Oráculo BI</span>
+            <main className="main-content flex-1">
+                {/* Top Header */}
+                <header className="top-header">
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
+                            <span className="hover:text-primary-600 cursor-pointer transition-colors">Home</span>
+                            <ChevronRight size={12} />
+                            <span className="text-text-primary font-bold">{getPathLabel()}</span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-6">
-                        <div className="relative group hidden md:block">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" size={16} />
-                            <input
-                                type="text"
-                                placeholder="Busca global..."
-                                className="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-2xl text-xs focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 outline-none transition-all w-64 shadow-sm"
-                            />
+                    <div className="flex items-center gap-4">
+                        {/* Date Range Selector Placeholder (Screenshot 1) */}
+                        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-white border border-border-light rounded-lg text-[11px] font-bold text-text-secondary shadow-sm cursor-pointer hover:bg-slate-50 transition-colors">
+                            <Calendar size={14} className="text-text-muted" />
+                            <span>01 Out, 2023 - 31 Out, 2023</span>
+                            <ChevronRight size={12} className="rotate-90" />
                         </div>
 
-                        <div className="flex items-center gap-2 bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
-                            <button className="p-2 text-text-secondary hover:text-primary-500 transition-colors cursor-pointer rounded-xl hover:bg-slate-50 relative">
+                        <div className="flex items-center gap-2">
+                            <button className="p-2 text-text-muted hover:text-primary-600 transition-colors relative">
                                 <Bell size={18} />
-                                <span className="absolute top-2 right-2 w-2 h-2 bg-danger rounded-full border-2 border-white"></span>
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
                             </button>
-                            <div className="w-px h-6 bg-slate-100"></div>
-                            <button className="p-2 text-text-secondary hover:text-primary-500 transition-colors cursor-pointer rounded-xl hover:bg-slate-50">
-                                <Globe size={18} />
-                            </button>
+                            <div className="w-px h-6 bg-slate-200 mx-1"></div>
+                            <div className="flex items-center gap-3 pl-2">
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-[11px] font-bold text-text-primary leading-tight">Analista BI</p>
+                                    <p className="text-[9px] text-text-muted font-medium">Nível Admin</p>
+                                </div>
+                                <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 border border-primary-200">
+                                    <User size={18} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </header>
 
+                {/* Sub-Header / Tabs (Screenshot 1) */}
+                <div className="bg-white border-bottom border-border-light px-8 pt-4 flex items-center justify-between">
+                    <div className="flex gap-8">
+                        <div className={`nav-tab ${location.pathname === '/dashboard' ? 'active' : ''}`}>Visão Geral</div>
+                        <div className="nav-tab">Performance</div>
+                        <div className="nav-tab">Equipe</div>
+                    </div>
+
+                    {location.pathname === '/dashboard' && (
+                        <button className="btn btn-primary h-9 px-4 text-xs mb-2">
+                            <Globe size={14} />
+                            Exportar
+                        </button>
+                    )}
+                </div>
+
                 {/* Content Area */}
-                <div className="max-w-[1600px] mx-auto">
+                <div className="p-8 max-w-[1600px] w-full mx-auto">
                     <Outlet />
                 </div>
 
                 {/* Footer */}
-                <footer className="mt-12 py-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] font-black text-text-muted tracking-widest uppercase">
-                    <p>© 2026 SGS — Todos os direitos reservados</p>
+                <footer className="mt-auto px-8 py-6 border-t border-border-light flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-medium text-text-muted">
+                    <p>© 2023 Ticketing Analytics Platform. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <a href="#" className="hover:text-primary-500 transition-colors">Termos de Uso</a>
-                        <a href="#" className="hover:text-primary-500 transition-colors">Privacidade</a>
-                        <a href="#" className="hover:text-primary-500 transition-colors">Documentação API</a>
+                        <a href="#" className="hover:text-primary-600 transition-colors">Termos</a>
+                        <a href="#" className="hover:text-primary-600 transition-colors">Privacidade</a>
+                        <a href="#" className="hover:text-primary-600 transition-colors">Suporte</a>
                     </div>
                 </footer>
             </main>

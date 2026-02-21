@@ -5,11 +5,10 @@ import {
     FileText,
     CheckCircle2,
     AlertCircle,
-    Clock,
     Trash2,
     RefreshCw,
     Database,
-    Search
+    History
 } from 'lucide-react';
 import Papa from 'papaparse';
 import StatusBadge from '../components/StatusBadge';
@@ -84,7 +83,7 @@ const UploadPage: React.FC = () => {
 
     const handleFileUpload = async (file: File) => {
         if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-            setStatus({ type: 'error', message: 'Por favor, selecione apenas arquivos CSV.' });
+            setStatus({ type: 'error', message: 'Tipo de arquivo inválido. Use apenas CSV.' });
             return;
         }
 
@@ -168,7 +167,7 @@ const UploadPage: React.FC = () => {
                         if (insertError) throw insertError;
 
                         setProgress(Math.round(((i + 1) / chunksCount) * 100));
-                        await new Promise(r => setTimeout(r, 200));
+                        await new Promise(r => setTimeout(r, 100));
                     }
 
                     await supabase
@@ -176,11 +175,11 @@ const UploadPage: React.FC = () => {
                         .update({ status: 'Sucesso' })
                         .eq('id', historyRecord.id);
 
-                    setStatus({ type: 'success', message: `${uniqueProcessedData.length} registros processados com sucesso!` });
+                    setStatus({ type: 'success', message: `${uniqueProcessedData.length} registros importados!` });
                     fetchHistory();
                 } catch (err: any) {
                     console.error('Erro no upload:', err);
-                    setStatus({ type: 'error', message: `Erro ao importar: ${err.message}` });
+                    setStatus({ type: 'error', message: `Falha na importação: ${err.message}` });
                 } finally {
                     setUploading(false);
                 }
@@ -189,130 +188,134 @@ const UploadPage: React.FC = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-premium-in">
-            <div className="text-center space-y-2">
-                <h1 className="text-4xl font-black text-text-primary tracking-tighter uppercase font-mono italic">Importação</h1>
-                <p className="text-xs font-black text-primary-500 uppercase tracking-widest">Sincronização de Base de Dados</p>
-            </div>
-
-            <div
-                className={`drop-zone p-16 flex flex-col items-center gap-8 ${dragActive ? 'active scale-102' : ''}`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-            >
-                <div className={`w-24 h-24 rounded-[2rem] bg-primary-50 text-primary-500 flex items-center justify-center shadow-inner transition-transform duration-500 ${uploading ? 'animate-bounce' : 'group-hover:scale-110'}`}>
-                    <UploadCloud size={40} />
-                </div>
-
-                <div className="text-center space-y-3">
-                    <h2 className="text-xl font-black text-text-primary tracking-tight">Arraste seu arquivo CSV</h2>
-                    <p className="text-xs font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2">
-                        <FileText size={14} /> Somente arquivos .csv com delimitador ";" (ponto e vírgula)
-                    </p>
-                </div>
-
-                <div className="flex flex-col items-center gap-4 w-full max-w-sm">
-                    <label className="btn btn-primary w-full h-12 shadow-primary-200 cursor-pointer">
-                        <input type="file" className="hidden" accept=".csv" onChange={handleFileInput} disabled={uploading} />
-                        <Search size={16} />
-                        <span className="font-black text-[11px] uppercase tracking-widest">Selecionar Arquivo</span>
-                    </label>
-                    <p className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] opacity-40">Tamanho máximo sugerido: 50MB</p>
-                </div>
-
-                {uploading && (
-                    <div className="w-full space-y-4 animate-fade-in">
-                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
-                            <div
-                                className="h-full bg-primary-500 transition-all duration-300 shadow-lg shadow-primary-200"
-                                style={{ width: `${progress}%` }}
-                            ></div>
-                        </div>
-                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-primary-500">
-                            <span>Processando registros...</span>
-                            <span className="font-mono">{progress}%</span>
-                        </div>
+        <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-10">
+            {/* Main Upload Box */}
+            <div className="bento-card overflow-hidden">
+                <div className="flex items-center gap-2 mb-8">
+                    <div className="w-8 h-8 bg-primary-100 text-primary-600 rounded-lg flex items-center justify-center">
+                        <UploadCloud size={18} />
                     </div>
-                )}
+                    <div>
+                        <h2 className="text-sm font-bold text-text-primary font-heading uppercase tracking-wide">Importar Dados</h2>
+                        <p className="text-[11px] text-text-muted">Faça o upload do arquivo CSV exportado do sistema</p>
+                    </div>
+                </div>
+
+                <div
+                    className={`border-2 border-dashed rounded-2xl p-12 transition-all duration-300 flex flex-col items-center justify-center gap-6 group ${dragActive
+                        ? 'border-primary-500 bg-primary-50/50'
+                        : 'border-slate-200 hover:border-primary-300 hover:bg-slate-50/50'
+                        }`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                >
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${uploading ? 'bg-primary-500 text-white animate-pulse' : 'bg-slate-100 text-text-muted group-hover:scale-110 group-hover:bg-primary-100 group-hover:text-primary-600'
+                        }`}>
+                        <FileText size={32} />
+                    </div>
+
+                    <div className="text-center">
+                        <p className="text-sm font-bold text-text-primary mb-1">Arraste e solte o arquivo aqui</p>
+                        <p className="text-[11px] text-text-muted">Ou clique para selecionar manualmente</p>
+                    </div>
+
+                    <label className="btn btn-primary h-10 px-6 cursor-pointer rounded-xl shadow-none">
+                        <input type="file" className="hidden" accept=".csv" onChange={handleFileInput} disabled={uploading} />
+                        Selecionar Arquivo
+                    </label>
+
+                    <p className="text-[10px] text-text-muted opacity-60">Delimitador aceito: Ponto e vírgula (;)</p>
+
+                    {uploading && (
+                        <div className="w-full max-w-sm mt-4 space-y-3">
+                            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-primary-500 transition-all duration-300"
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] font-bold text-primary-600 uppercase">
+                                <span>Processando base...</span>
+                                <span>{progress}%</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
 
+            {/* Status Feedback */}
             {status.type !== 'idle' && (
-                <div className={`glass-card p-6 border-none flex items-center gap-4 animate-fade-scale ${status.type === 'success' ? 'bg-emerald-50/50 text-emerald-700' : 'bg-rose-50/50 text-rose-700'
+                <div className={`p-4 rounded-xl flex items-center gap-3 animate-fade-in ${status.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-rose-50 text-rose-700 border border-rose-100'
                     }`}>
-                    {status.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
-                    <p className="text-sm font-bold">{status.message}</p>
+                    {status.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+                    <span className="text-xs font-bold">{status.message}</span>
                 </div>
             )}
 
-            <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-text-muted flex items-center gap-2">
-                        <Clock size={14} className="text-primary-500" /> Histórico de Uploads
-                    </h2>
-                    <button onClick={fetchHistory} className="text-[9px] font-black text-primary-500 hover:text-primary-600 uppercase tracking-widest flex items-center gap-1.5 cursor-pointer">
-                        <RefreshCw size={12} /> Atualizar
+            {/* History Section */}
+            <div className="bento-card">
+                <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-slate-100 text-text-secondary rounded-lg flex items-center justify-center">
+                            <History size={18} />
+                        </div>
+                        <h2 className="text-sm font-bold text-text-primary font-heading uppercase tracking-wide">Histórico Recente</h2>
+                    </div>
+                    <button onClick={fetchHistory} className="text-[11px] font-bold text-primary-600 flex items-center gap-1.5 hover:text-primary-700">
+                        <RefreshCw size={14} />
+                        Atualizar
                     </button>
                 </div>
 
-                <div className="glass-card overflow-hidden">
-                    <div className="table-container border-none rounded-none">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Arquivo</th>
-                                    <th>Data</th>
-                                    <th>Registros</th>
-                                    <th>Status</th>
-                                    <th className="text-right">Ação</th>
+                <div className="table-wrapper">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th className="pl-6">Arquivo</th>
+                                <th>Data</th>
+                                <th>Volume</th>
+                                <th>Status</th>
+                                <th className="pr-6 text-right">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {history.length > 0 ? history.map((item) => (
+                                <tr key={item.id}>
+                                    <td className="pl-6 font-semibold text-text-primary">{item.filename}</td>
+                                    <td className="text-text-muted">{new Date(item.created_at).toLocaleDateString()}</td>
+                                    <td className="font-bold text-text-secondary">{item.records_count} rows</td>
+                                    <td><StatusBadge status={item.status} /></td>
+                                    <td className="pr-6 text-right">
+                                        <button className="p-2 text-text-muted hover:text-rose-500 transition-colors">
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {history.length > 0 ? (
-                                    history.map((item) => (
-                                        <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="font-bold text-[11px] text-text-primary flex items-center gap-3">
-                                                <FileText size={14} className="text-primary-400" />
-                                                <span className="truncate max-w-[200px]">{item.filename}</span>
-                                            </td>
-                                            <td className="text-[10px] font-bold text-text-muted uppercase">
-                                                {new Date(item.created_at).toLocaleString()}
-                                            </td>
-                                            <td className="font-mono text-[11px] font-black text-text-secondary">
-                                                {item.records_count}
-                                            </td>
-                                            <td>
-                                                <StatusBadge status={item.status} />
-                                            </td>
-                                            <td className="text-right">
-                                                <button className="p-2 text-text-muted hover:text-danger cursor-pointer transition-colors">
-                                                    <Trash2 size={14} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={5} className="text-center py-12 text-[10px] font-black text-text-muted uppercase tracking-widest opacity-30">
-                                            Nenhum histórico disponível
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                            )) : (
+                                <tr>
+                                    <td colSpan={5} className="text-center py-10 text-xs text-text-muted">Nenhum upload registrado</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 opacity-60">
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-border-light">
+                    <Database size={20} className="text-primary-500" />
+                    <div>
+                        <p className="text-[10px] font-bold text-text-primary uppercase">Infraestrutura</p>
+                        <p className="text-[11px] text-text-muted">Sincronizado via Supabase Cloud</p>
                     </div>
                 </div>
-
-                <div className="flex items-center justify-center gap-8 py-8 opacity-40">
-                    <div className="flex items-center gap-2">
-                        <Database size={16} className="text-text-muted" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-text-muted">Conectado ao Supabase</span>
-                    </div>
-                    <div className="w-1 h-1 bg-slate-200 rounded-full"></div>
-                    <div className="flex items-center gap-2">
-                        <CheckCircle2 size={16} className="text-emerald-500" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-text-muted">SSL Seguro Ativo</span>
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-border-light">
+                    <CheckCircle2 size={20} className="text-emerald-500" />
+                    <div>
+                        <p className="text-[10px] font-bold text-text-primary uppercase">Segurança</p>
+                        <p className="text-[11px] text-text-muted">Protocolo de criptografia SSL ativo</p>
                     </div>
                 </div>
             </div>

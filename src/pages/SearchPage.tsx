@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Search as SearchIcon, Download, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search as SearchIcon, Download, RefreshCw, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
 
 interface Chamado {
@@ -65,7 +65,7 @@ const SearchPage: React.FC = () => {
                 status_filter: selectedStatus.length > 0 ? selectedStatus : null,
                 grupo_filter: selectedGroups.length > 0 ? selectedGroups : null,
                 has_solution: hasSolution === null ? 'todos' : (hasSolution ? 'com' : 'sem'),
-                page_number: page + 1, // RPC expects 1-based paging
+                page_number: page + 1,
                 page_size: pageSize,
                 date_from: null,
                 date_to: null
@@ -98,50 +98,41 @@ const SearchPage: React.FC = () => {
     };
 
     return (
-        <div className="space-y-8 pb-12 animate-premium-in">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-4xl font-black text-text-primary tracking-tighter uppercase font-mono italic">Busca Avançada</h1>
-                    <p className="text-xs font-black text-primary-500 uppercase tracking-widest mt-1">Exploração Profunda de Dados</p>
-                </div>
-            </div>
-
-            {/* Top Horizontal Filters */}
-            <div className="glass-card p-6 border-none shadow-xl shadow-slate-200/20 animate-fade-scale">
+        <div className="space-y-6 animate-fade-in pb-10">
+            {/* Filter Section */}
+            <div className="bento-card">
                 <div className="flex flex-col xl:flex-row items-end gap-6">
                     {/* Text Search */}
                     <div className="w-full xl:w-96 space-y-2">
-                        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
-                            <SearchIcon size={12} className="text-primary-500" /> Busca Textual
+                        <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider flex items-center gap-2">
+                            <SearchIcon size={12} className="text-primary-500" /> Pesquisa Global
                         </label>
-                        <div className="relative group flex gap-2">
+                        <div className="flex gap-2">
                             <input
                                 type="text"
                                 placeholder="Termo, ID ou Descrição..."
-                                className="input h-10 text-[11px] font-bold"
+                                className="input h-10 text-xs font-semibold"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && executeSearch()}
                             />
                             <select
-                                className="input h-10 w-32 px-3 text-[10px] font-black uppercase tracking-tight"
+                                className="input h-10 w-32 px-2 text-[10px] font-bold uppercase"
                                 value={searchField}
                                 onChange={(e) => setSearchField(e.target.value as any)}
                             >
-                                <option value="both">TODOS</option>
-                                <option value="descricao">DESCRIÇÃO</option>
-                                <option value="solucao">SOLUÇÃO</option>
+                                <option value="both">Todos</option>
+                                <option value="descricao">Descrição</option>
+                                <option value="solucao">Solução</option>
                             </select>
                         </div>
                     </div>
 
-                    {/* Quick Filters */}
+                    {/* Controls */}
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                        {/* Status Filter */}
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Status Selecionados</label>
-                            <div className="flex flex-wrap gap-1.5 max-h-16 overflow-y-auto p-1 custom-scrollbar bg-slate-50/50 rounded-xl border border-slate-100 min-h-10">
+                            <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Status</label>
+                            <div className="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto p-1.5 bg-slate-50 rounded-lg border border-border-light min-h-10 custom-scrollbar">
                                 {metadata.status.map((status) => (
                                     <button
                                         key={status}
@@ -149,9 +140,9 @@ const SearchPage: React.FC = () => {
                                             if (selectedStatus.includes(status)) setSelectedStatus(selectedStatus.filter(s => s !== status));
                                             else setSelectedStatus([...selectedStatus, status]);
                                         }}
-                                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all border ${selectedStatus.includes(status)
-                                            ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
-                                            : 'bg-white text-text-muted border-slate-100 hover:border-primary-200'
+                                        className={`px-3 py-1.5 rounded-md text-[9px] font-bold uppercase transition-all ${selectedStatus.includes(status)
+                                            ? 'bg-primary-500 text-white'
+                                            : 'bg-white text-text-secondary border border-border-light hover:border-primary-400'
                                             }`}
                                     >
                                         {status}
@@ -160,38 +151,36 @@ const SearchPage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Resolution Filter */}
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Resolução</label>
-                            <div className="flex gap-1.5 p-1 bg-slate-50 rounded-xl border border-slate-100 h-10">
+                            <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Resolução</label>
+                            <div className="flex gap-1.5 p-1 bg-slate-50 rounded-lg border border-border-light h-10">
                                 {([null, true, false] as const).map((val) => (
                                     <button
                                         key={String(val)}
                                         onClick={() => setHasSolution(val)}
-                                        className={`flex-1 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all ${hasSolution === val
-                                            ? 'bg-white text-primary-600 shadow-sm border border-slate-100'
+                                        className={`flex-1 rounded-md text-[9px] font-bold uppercase transition-all ${hasSolution === val
+                                            ? 'bg-white text-primary-600 shadow-sm'
                                             : 'text-text-muted hover:text-text-secondary'
                                             }`}
                                     >
-                                        {val === null ? 'Geral' : (val ? 'Com Solução' : 'Sem Solução')}
+                                        {val === null ? 'Geral' : (val ? 'Com' : 'Sem')}
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Actions */}
                         <div className="flex items-end gap-2">
                             <button
-                                className="btn btn-primary flex-1 h-10 shadow-primary-200"
+                                className="btn btn-primary flex-1 h-10"
                                 onClick={() => { setPage(0); executeSearch(); }}
                             >
-                                <SearchIcon size={14} />
-                                <span className="font-black text-[10px] uppercase tracking-widest">Pesquisar</span>
+                                <Filter size={14} />
+                                Filtrar
                             </button>
                             <button
                                 onClick={clearFilters}
-                                className="btn btn-outline h-10 w-10 border-slate-200 bg-white text-text-muted hover:text-rose-500"
-                                title="Limpar Filtros"
+                                className="btn btn-outline h-10 w-10 px-0"
+                                title="Limpar"
                             >
                                 <RefreshCw size={14} />
                             </button>
@@ -200,82 +189,79 @@ const SearchPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Results Container */}
-            <div className="flex-1 space-y-6 min-w-0">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="badge badge-success px-4 py-2 shadow-sm italic font-mono uppercase tracking-widest">
-                        {loading ? 'Pesquisando...' : `${totalCount.toLocaleString()} RegistrosEncontrados`}
+            {/* Content Section */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-text-primary px-3 py-1.5 bg-white border border-border-light rounded-lg shadow-sm">
+                            {loading ? '...' : totalCount.toLocaleString()} Registros
+                        </span>
                     </div>
                     <div className="flex gap-2">
-                        <button className="btn btn-outline btn-sm h-10 border-slate-200 bg-white text-text-secondary hover:text-primary-500 cursor-pointer">
-                            <Download size={14} /> <span className="uppercase font-black text-[9px] tracking-widest">Export</span>
+                        <button className="btn btn-outline btn-sm h-9 px-3">
+                            <Download size={14} />
+                            <span className="text-[11px]">CSV</span>
                         </button>
-                        <button className="btn btn-outline btn-sm h-10 border-slate-200 bg-white text-text-secondary hover:text-primary-500 cursor-pointer" onClick={executeSearch}>
+                        <button className="btn btn-outline btn-sm h-9 px-3" onClick={executeSearch}>
                             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
                         </button>
                     </div>
                 </div>
 
-                <div className="glass-card shadow-xl shadow-slate-200/20 overflow-hidden border-none">
+                <div className="table-wrapper">
                     <div className="overflow-x-auto custom-scrollbar">
                         <table className="table min-w-[2800px]">
                             <thead>
-                                <tr className="bg-slate-50/50">
-                                    <th className="font-mono sticky left-0 bg-slate-50 z-10 py-5 pl-8">TICKET</th>
-                                    <th>CRIADO EM</th>
-                                    <th>SOLICITANTE</th>
-                                    <th>GRUPO RESPONSÁVEL</th>
-                                    <th>ESPECIALISTA</th>
-                                    <th>GRUPO ESPECIALISTA</th>
-                                    <th>STATUS OPERACIONAL</th>
-                                    <th>STATUS FINAL</th>
-                                    <th>STATUS AGRUPADO</th>
-                                    <th>FECHADO EM</th>
-                                    <th className="min-w-[400px]">DESCRIÇÃO</th>
-                                    <th className="min-w-[400px]">SOLUÇÃO</th>
-                                    <th className="min-w-[400px]">COMENTÁRIOS</th>
+                                <tr>
+                                    <th className="sticky left-0 bg-slate-50 z-10 w-32 pl-8">ID</th>
+                                    <th>Data de Criação</th>
+                                    <th>Solicitante</th>
+                                    <th>Grupo Principal</th>
+                                    <th>Especialista</th>
+                                    <th>Grupo Especialista</th>
+                                    <th>Operacional</th>
+                                    <th>Status Final</th>
+                                    <th>Agrupado</th>
+                                    <th>Conclusão</th>
+                                    <th className="min-w-[400px]">Descrição</th>
+                                    <th className="min-w-[400px]">Solução</th>
+                                    <th className="min-w-[400px]">Observações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
                                     [...Array(pageSize)].map((_, i) => (
                                         <tr key={i}>
-                                            <td className="sticky left-0 bg-white"><div className="h-4 bg-slate-100 rounded-full w-16 animate-pulse"></div></td>
+                                            <td className="sticky left-0 bg-white shadow-sm p-4"><div className="h-4 bg-slate-100 rounded w-16 animate-pulse" /></td>
                                             {[...Array(12)].map((_, j) => (
-                                                <td key={j} className="animate-pulse py-6"><div className="h-3 bg-slate-50 rounded-full w-full"></div></td>
+                                                <td key={j} className="p-4"><div className="h-4 bg-slate-50 rounded w-full animate-pulse" /></td>
                                             ))}
                                         </tr>
                                     ))
                                 ) : results.length > 0 ? (
                                     results.map((ticket) => (
-                                        <tr key={ticket.id} className="group transition-colors hover:bg-slate-50/20 text-[10.5px]">
-                                            <td className="font-mono font-black text-primary-500 sticky left-0 bg-white z-10 group-hover:bg-slate-50 transition-colors pl-8">#{ticket.id}</td>
-                                            <td className="font-bold text-text-secondary uppercase">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="font-black text-text-primary uppercase tracking-tight truncate max-w-[200px]">{ticket.solicitado_para}</td>
-                                            <td className="font-bold text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_responsavel}</td>
-                                            <td className="font-black text-primary-600 uppercase truncate max-w-[200px]">{ticket.designado_especialista || '-'}</td>
-                                            <td className="font-bold text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_especialistas || '-'}</td>
-                                            <td><span className="px-2 py-1 rounded bg-slate-50 text-[9px] font-black uppercase text-slate-500 whitespace-nowrap">{ticket.status_operacional}</span></td>
+                                        <tr key={ticket.id}>
+                                            <td className="sticky left-0 bg-white font-bold text-primary-600 border-r border-slate-50 z-10 p-4 pl-8">#{ticket.id}</td>
+                                            <td className="text-text-secondary whitespace-nowrap">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
+                                            <td className="font-semibold text-text-primary uppercase truncate max-w-[200px]">{ticket.solicitado_para}</td>
+                                            <td className="text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_responsavel}</td>
+                                            <td className="font-bold text-text-primary uppercase truncate max-w-[200px]">{ticket.designado_especialista || '-'}</td>
+                                            <td className="text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_especialistas || '-'}</td>
+                                            <td><span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{ticket.status_operacional}</span></td>
                                             <td><StatusBadge status={ticket.status} /></td>
-                                            <td><span className="px-2 py-1 rounded bg-primary-50 text-[9px] font-black uppercase text-primary-600 whitespace-nowrap">{ticket.status_agrupado}</span></td>
-                                            <td className="font-bold text-text-secondary uppercase">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="max-w-[400px] py-4 pr-10">
-                                                <p className="font-medium text-text-secondary line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity" dangerouslySetInnerHTML={{ __html: ticket.descricao || '' }} />
-                                            </td>
-                                            <td className="max-w-[400px] py-4 pr-10">
-                                                <p className="font-medium text-emerald-700 line-clamp-2 leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity" dangerouslySetInnerHTML={{ __html: ticket.solucao || '' }} />
-                                            </td>
-                                            <td className="max-w-[400px] py-4 pr-10">
-                                                <p className="font-medium text-text-muted line-clamp-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: ticket.comentarios || '' }} />
-                                            </td>
+                                            <td><span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span></td>
+                                            <td className="text-text-secondary whitespace-nowrap">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
+                                            <td className="text-[13px] leading-relaxed text-text-secondary pr-10" dangerouslySetInnerHTML={{ __html: ticket.descricao || '' }} />
+                                            <td className="text-[13px] leading-relaxed text-emerald-700 pr-10" dangerouslySetInnerHTML={{ __html: ticket.solucao || '' }} />
+                                            <td className="text-[13px] leading-relaxed text-text-muted pr-10" dangerouslySetInnerHTML={{ __html: ticket.comentarios || '' }} />
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={13} className="text-center py-40">
-                                            <div className="flex flex-col items-center gap-4 opacity-20">
-                                                <SearchIcon size={48} />
-                                                <p className="font-black text-[10px] uppercase tracking-[0.3em]">Nenhum registro encontrado</p>
+                                        <td colSpan={13} className="text-center py-32">
+                                            <div className="flex flex-col items-center gap-3 opacity-30">
+                                                <SearchIcon size={40} />
+                                                <p className="text-xs font-bold uppercase tracking-widest">Nenhum dado encontrado</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -287,23 +273,23 @@ const SearchPage: React.FC = () => {
 
                 {/* Pagination */}
                 {!loading && totalCount > pageSize && (
-                    <div className="flex justify-center items-center gap-4 pt-4">
+                    <div className="flex justify-center items-center gap-3 pt-4">
                         <button
-                            className="btn btn-outline btn-sm bg-white shadow-sm border-slate-200 disabled:opacity-30"
+                            className="btn btn-outline btn-sm bg-white disabled:opacity-30"
                             disabled={page === 0}
                             onClick={() => setPage(p => p - 1)}
                         >
-                            <ChevronLeft size={16} />
+                            <ChevronLeft size={14} />
                         </button>
-                        <div className="px-6 py-2 bg-white border border-slate-200 rounded-2xl shadow-sm text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
-                            Page <span className="font-mono text-primary-500 text-xs">{page + 1}</span> of <span className="font-mono text-xs">{Math.ceil(totalCount / pageSize)}</span>
-                        </div>
+                        <span className="text-xs font-bold text-text-secondary px-4 py-2 bg-white border border-border-light rounded-lg">
+                            {page + 1} de {Math.ceil(totalCount / pageSize)}
+                        </span>
                         <button
-                            className="btn btn-outline btn-sm bg-white shadow-sm border-slate-200 disabled:opacity-30"
+                            className="btn btn-outline btn-sm bg-white disabled:opacity-30"
                             disabled={(page + 1) * pageSize >= totalCount}
                             onClick={() => setPage(p => p + 1)}
                         >
-                            <ChevronRight size={16} />
+                            <ChevronRight size={14} />
                         </button>
                     </div>
                 )}
