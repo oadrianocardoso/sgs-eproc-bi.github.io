@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Search as SearchIcon, Download, RefreshCw, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search as SearchIcon, Download, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
 
 interface Chamado {
@@ -98,89 +98,107 @@ const SearchPage: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-8 items-start min-w-0 pb-12 animate-premium-in">
-            {/* Sidebar Filters */}
-            <aside className="w-full lg:w-80 glass-card p-8 sticky top-8 flex-shrink-0 animate-fade-scale">
-                <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-2">
-                        <Filter size={14} className="text-primary-500" />
-                        <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-text-primary">Filtros</h2>
-                    </div>
-                    <button
-                        onClick={clearFilters}
-                        className="text-[9px] font-black text-primary-500 hover:text-primary-600 uppercase tracking-widest cursor-pointer"
-                    >
-                        Limpar
-                    </button>
+        <div className="space-y-8 pb-12 animate-premium-in">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-4xl font-black text-text-primary tracking-tighter uppercase font-mono italic">Busca Avançada</h1>
+                    <p className="text-xs font-black text-primary-500 uppercase tracking-widest mt-1">Exploração Profunda de Dados</p>
                 </div>
+            </div>
 
-                <div className="space-y-8">
-                    <div className="space-y-3">
-                        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Busca Textual</label>
-                        <div className="relative group">
-                            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary-500 transition-colors" size={16} />
+            {/* Top Horizontal Filters */}
+            <div className="glass-card p-6 border-none shadow-xl shadow-slate-200/20 animate-fade-scale">
+                <div className="flex flex-col xl:flex-row items-end gap-6">
+                    {/* Text Search */}
+                    <div className="w-full xl:w-96 space-y-2">
+                        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest flex items-center gap-2">
+                            <SearchIcon size={12} className="text-primary-500" /> Busca Textual
+                        </label>
+                        <div className="relative group flex gap-2">
                             <input
                                 type="text"
-                                placeholder="Termo..."
-                                className="input pl-10 h-11"
+                                placeholder="Termo, ID ou Descrição..."
+                                className="input h-10 text-[11px] font-bold"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && executeSearch()}
                             />
-                        </div>
-
-                        <div className="flex gap-1.5 p-1 bg-slate-50/50 rounded-xl border border-slate-100">
-                            {(['both', 'descricao', 'solucao'] as const).map((field) => (
-                                <button
-                                    key={field}
-                                    onClick={() => setSearchField(field)}
-                                    className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all ${searchField === field
-                                        ? 'bg-white text-primary-600 shadow-sm border border-slate-100'
-                                        : 'text-text-muted hover:text-text-secondary'
-                                        }`}
-                                >
-                                    {field === 'both' ? 'Todos' : field}
-                                </button>
-                            ))}
+                            <select
+                                className="input h-10 w-32 px-3 text-[10px] font-black uppercase tracking-tight"
+                                value={searchField}
+                                onChange={(e) => setSearchField(e.target.value as any)}
+                            >
+                                <option value="both">TODOS</option>
+                                <option value="descricao">DESCRIÇÃO</option>
+                                <option value="solucao">SOLUÇÃO</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Status</label>
-                        <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                            {metadata.status.map((status) => (
-                                <label key={status} className="flex items-center gap-3 group cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        className="hidden"
-                                        checked={selectedStatus.includes(status)}
-                                        onChange={(e) => {
-                                            if (e.target.checked) setSelectedStatus([...selectedStatus, status]);
-                                            else setSelectedStatus(selectedStatus.filter(s => s !== status));
+                    {/* Quick Filters */}
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                        {/* Status Filter */}
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Status Selecionados</label>
+                            <div className="flex flex-wrap gap-1.5 max-h-16 overflow-y-auto p-1 custom-scrollbar bg-slate-50/50 rounded-xl border border-slate-100 min-h-10">
+                                {metadata.status.map((status) => (
+                                    <button
+                                        key={status}
+                                        onClick={() => {
+                                            if (selectedStatus.includes(status)) setSelectedStatus(selectedStatus.filter(s => s !== status));
+                                            else setSelectedStatus([...selectedStatus, status]);
                                         }}
-                                    />
-                                    <div className={`w-4 h-4 rounded-md border-2 flex-shrink-0 transition-all flex items-center justify-center ${selectedStatus.includes(status)
-                                        ? 'bg-primary-500 border-primary-500 shadow-md shadow-primary-200'
-                                        : 'bg-white border-slate-200 group-hover:border-primary-300'
-                                        }`}>
-                                        {selectedStatus.includes(status) && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
-                                    </div>
-                                    <span className={`text-[10px] font-bold uppercase tracking-tight truncate ${selectedStatus.includes(status) ? 'text-text-primary' : 'text-text-secondary group-hover:text-primary-500'
-                                        }`}>{status}</span>
-                                </label>
-                            ))}
+                                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all border ${selectedStatus.includes(status)
+                                            ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
+                                            : 'bg-white text-text-muted border-slate-100 hover:border-primary-200'
+                                            }`}
+                                    >
+                                        {status}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Resolution Filter */}
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest">Resolução</label>
+                            <div className="flex gap-1.5 p-1 bg-slate-50 rounded-xl border border-slate-100 h-10">
+                                {([null, true, false] as const).map((val) => (
+                                    <button
+                                        key={String(val)}
+                                        onClick={() => setHasSolution(val)}
+                                        className={`flex-1 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all ${hasSolution === val
+                                            ? 'bg-white text-primary-600 shadow-sm border border-slate-100'
+                                            : 'text-text-muted hover:text-text-secondary'
+                                            }`}
+                                    >
+                                        {val === null ? 'Geral' : (val ? 'Com Solução' : 'Sem Solução')}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-end gap-2">
+                            <button
+                                className="btn btn-primary flex-1 h-10 shadow-primary-200"
+                                onClick={() => { setPage(0); executeSearch(); }}
+                            >
+                                <SearchIcon size={14} />
+                                <span className="font-black text-[10px] uppercase tracking-widest">Pesquisar</span>
+                            </button>
+                            <button
+                                onClick={clearFilters}
+                                className="btn btn-outline h-10 w-10 border-slate-200 bg-white text-text-muted hover:text-rose-500"
+                                title="Limpar Filtros"
+                            >
+                                <RefreshCw size={14} />
+                            </button>
                         </div>
                     </div>
-
-                    <button
-                        className="btn btn-primary w-full h-11 shadow-primary-200"
-                        onClick={() => { setPage(0); executeSearch(); }}
-                    >
-                        <SearchIcon size={16} />
-                        <span className="font-black text-[11px] uppercase tracking-widest">Aplicar Filtros</span>
-                    </button>
                 </div>
-            </aside>
+            </div>
 
             {/* Results Container */}
             <div className="flex-1 space-y-6 min-w-0">
