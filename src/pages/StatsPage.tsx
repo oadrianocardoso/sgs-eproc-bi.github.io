@@ -4,7 +4,8 @@ import {
     Users,
     Clock,
     CheckCircle2,
-    ArrowUpRight
+    ArrowUpRight,
+    RefreshCw
 } from 'lucide-react';
 import {
     AreaChart,
@@ -102,37 +103,44 @@ const StatsPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="h-72 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={stats?.by_hour || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                <defs>
-                                    <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                <XAxis
-                                    dataKey="hour"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }}
-                                    tickFormatter={(val) => `${String(val).padStart(2, '0')}:00`}
-                                />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
-                                <Tooltip
-                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', fontSize: '11px', fontWeight: 'bold' }}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="count"
-                                    stroke="#6366f1"
-                                    strokeWidth={3}
-                                    fillOpacity={1}
-                                    fill="url(#colorCount)"
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                    <div className="h-72 w-full flex items-center justify-center">
+                        {loading ? (
+                            <div className="flex flex-col items-center gap-2 opacity-20">
+                                <RefreshCw size={24} className="animate-spin text-primary-500" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">Carregando Dados...</span>
+                            </div>
+                        ) : (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={stats?.by_hour || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis
+                                        dataKey="hour"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }}
+                                        tickFormatter={(val) => `${String(val).padStart(2, '0')}:00`}
+                                    />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
+                                    <Tooltip
+                                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', fontSize: '11px', fontWeight: 'bold' }}
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="count"
+                                        stroke="#6366f1"
+                                        strokeWidth={3}
+                                        fillOpacity={1}
+                                        fill="url(#colorCount)"
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        )}
                     </div>
                 </div>
 
@@ -143,29 +151,37 @@ const StatsPage: React.FC = () => {
                         <p className="text-[11px] text-text-muted">Distribuição percentual</p>
                     </div>
 
-                    <div className="h-44 relative">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={stats?.by_status || []}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={55}
-                                    outerRadius={75}
-                                    paddingAngle={5}
-                                    dataKey="count"
-                                >
-                                    {(stats?.by_status || []).map((_: any, index: number) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span className="text-2xl font-bold text-text-primary leading-none">{stats?.total_chamados || 0}</span>
-                            <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Total</span>
-                        </div>
+                    <div className="h-44 relative flex items-center justify-center">
+                        {loading ? (
+                            <div className="flex flex-col items-center gap-1 opacity-20">
+                                <RefreshCw size={20} className="animate-spin text-primary-500" />
+                            </div>
+                        ) : (
+                            <>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={stats?.by_status || []}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={55}
+                                            outerRadius={75}
+                                            paddingAngle={5}
+                                            dataKey="count"
+                                        >
+                                            {(stats?.by_status || []).map((_: any, index: number) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className="text-2xl font-bold text-text-primary leading-none">{stats?.total_chamados || 0}</span>
+                                    <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Total</span>
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     <div className="mt-8 space-y-3">
