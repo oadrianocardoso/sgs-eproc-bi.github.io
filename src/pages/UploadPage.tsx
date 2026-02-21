@@ -154,7 +154,7 @@ const UploadPage: React.FC = () => {
                         solucao: row.solucao
                     }));
 
-                    const chunkSize = 100;
+                    const chunkSize = 50;
                     const chunksCount = Math.ceil(uniqueProcessedData.length / chunkSize);
 
                     for (let i = 0; i < chunksCount; i++) {
@@ -168,7 +168,7 @@ const UploadPage: React.FC = () => {
                         if (insertError) throw insertError;
 
                         setProgress(Math.round(((i + 1) / chunksCount) * 100));
-                        await new Promise(r => setTimeout(r, 100));
+                        await new Promise(r => setTimeout(r, 200));
                     }
 
                     await supabase
