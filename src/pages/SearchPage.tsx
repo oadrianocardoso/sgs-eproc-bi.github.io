@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { Search as SearchIcon, Download, RefreshCw, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
 import { sanitizeTicketHtml } from '../lib/utils';
+import Tooltip from '../components/Tooltip';
 
 interface Chamado {
     id: string;
@@ -244,17 +245,45 @@ const SearchPage: React.FC = () => {
                                         <tr key={ticket.id}>
                                             <td className="sticky left-0 bg-white font-bold text-primary-600 border-r border-slate-50 z-10 p-4 pl-8">#{ticket.id}</td>
                                             <td className="text-text-secondary whitespace-nowrap">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="font-semibold text-text-primary uppercase truncate max-w-[200px]">{ticket.solicitado_para}</td>
-                                            <td className="text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_responsavel}</td>
-                                            <td className="font-bold text-text-primary uppercase truncate max-w-[200px]">{ticket.designado_especialista || '-'}</td>
-                                            <td className="text-text-muted uppercase truncate max-w-[200px]">{ticket.grupo_especialistas || '-'}</td>
+                                            <td className="font-semibold text-text-primary uppercase truncate max-w-[200px]">
+                                                <Tooltip text={ticket.solicitado_para}>
+                                                    {ticket.solicitado_para}
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-text-muted uppercase truncate max-w-[200px]">
+                                                <Tooltip text={ticket.grupo_responsavel}>
+                                                    {ticket.grupo_responsavel}
+                                                </Tooltip>
+                                            </td>
+                                            <td className="font-bold text-text-primary uppercase truncate max-w-[200px]">
+                                                <Tooltip text={ticket.designado_especialista || '-'}>
+                                                    {ticket.designado_especialista || '-'}
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-text-muted uppercase truncate max-w-[200px]">
+                                                <Tooltip text={ticket.grupo_especialistas || '-'}>
+                                                    {ticket.grupo_especialistas || '-'}
+                                                </Tooltip>
+                                            </td>
                                             <td><span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{ticket.status_operacional}</span></td>
                                             <td><StatusBadge status={ticket.status} /></td>
                                             <td><span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span></td>
                                             <td className="text-text-secondary whitespace-nowrap">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="text-[13px] leading-relaxed text-text-secondary pr-10" dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.descricao) }} />
-                                            <td className="text-[13px] leading-relaxed text-emerald-700 pr-10" dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.solucao) }} />
-                                            <td className="text-[13px] leading-relaxed text-text-muted pr-10" dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.comentarios) }} />
+                                            <td className="text-[13px] leading-relaxed text-text-secondary pr-10">
+                                                <Tooltip text={ticket.descricao?.replace(/<[^>]*>/g, '') || ''}>
+                                                    <div dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.descricao) }} />
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-[13px] leading-relaxed text-emerald-700 pr-10">
+                                                <Tooltip text={ticket.solucao?.replace(/<[^>]*>/g, '') || ''}>
+                                                    <div dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.solucao) }} />
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-[13px] leading-relaxed text-text-muted pr-10">
+                                                <Tooltip text={ticket.comentarios?.replace(/<[^>]*>/g, '') || ''}>
+                                                    <div dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.comentarios) }} />
+                                                </Tooltip>
+                                            </td>
                                         </tr>
                                     ))
                                 ) : (
