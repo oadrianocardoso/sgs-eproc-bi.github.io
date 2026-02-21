@@ -215,8 +215,8 @@ const SearchPage: React.FC = () => {
                         <table className="table min-w-[2800px]">
                             <thead>
                                 <tr>
-                                    <th className="sticky-col w-32 pl-8">ID</th>
-                                    <th>Data de Criação</th>
+                                    <th className="sticky-col">ID</th>
+                                    <th>Criação</th>
                                     <th>Solicitante</th>
                                     <th>Grupo Principal</th>
                                     <th>Especialista</th>
@@ -225,9 +225,9 @@ const SearchPage: React.FC = () => {
                                     <th>Status Final</th>
                                     <th>Agrupado</th>
                                     <th>Conclusão</th>
-                                    <th className="min-w-[400px]">Descrição</th>
-                                    <th className="min-w-[400px]">Solução</th>
-                                    <th className="min-w-[400px]">Observações</th>
+                                    <th>Descrição</th>
+                                    <th>Solução</th>
+                                    <th>Observações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -244,7 +244,11 @@ const SearchPage: React.FC = () => {
                                     results.map((ticket) => (
                                         <tr key={ticket.id} className="cursor-pointer">
                                             <td className="sticky-col pl-8">#{ticket.id}</td>
-                                            <td className="text-text-secondary whitespace-nowrap">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
+                                            <td className="text-text-secondary whitespace-nowrap">
+                                                <Tooltip text={ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}>
+                                                    {ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}
+                                                </Tooltip>
+                                            </td>
                                             <td className="font-semibold text-text-primary uppercase">
                                                 <Tooltip text={ticket.solicitado_para}>
                                                     {ticket.solicitado_para}
@@ -265,10 +269,26 @@ const SearchPage: React.FC = () => {
                                                     {ticket.grupo_especialistas || '-'}
                                                 </Tooltip>
                                             </td>
-                                            <td><span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{ticket.status_operacional}</span></td>
-                                            <td><StatusBadge status={ticket.status} /></td>
-                                            <td><span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span></td>
-                                            <td className="text-text-secondary whitespace-nowrap">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
+                                            <td>
+                                                <Tooltip text={ticket.status_operacional || '-'}>
+                                                    <span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{ticket.status_operacional}</span>
+                                                </Tooltip>
+                                            </td>
+                                            <td>
+                                                <Tooltip text={ticket.status || '-'}>
+                                                    <StatusBadge status={ticket.status} />
+                                                </Tooltip>
+                                            </td>
+                                            <td>
+                                                <Tooltip text={ticket.status_agrupado || '-'}>
+                                                    <span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span>
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-text-secondary whitespace-nowrap">
+                                                <Tooltip text={ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}>
+                                                    {ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}
+                                                </Tooltip>
+                                            </td>
                                             <td className="text-[13px] text-text-secondary">
                                                 <Tooltip text={ticket.descricao?.replace(/<[^>]*>/g, '') || ''}>
                                                     <span dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.descricao) }} />
