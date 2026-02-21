@@ -53,21 +53,23 @@ const SearchPage: React.FC = () => {
     const executeSearch = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase.rpc('search_chamados', {
-                search_query: searchQuery || null,
-                search_in: searchField,
+            const { data: response, error } = await supabase.rpc('search_chamados', {
+                search_query: searchQuery || '',
+                search_field: searchField,
                 status_filter: selectedStatus.length > 0 ? selectedStatus : null,
                 grupo_filter: selectedGroups.length > 0 ? selectedGroups : null,
-                has_solution: hasSolution,
-                page_num: page,
-                page_size: pageSize
+                has_solution: hasSolution === null ? 'todos' : (hasSolution ? 'com' : 'sem'),
+                page_number: page + 1, // RPC expects 1-based paging
+                page_size: pageSize,
+                date_from: null,
+                date_to: null
             });
 
             if (error) throw error;
 
-            if (data && data.length > 0) {
-                setResults(data);
-                setTotalCount(data[0].total_count || 0);
+            if (response && response.data) {
+                setResults(response.data);
+                setTotalCount(response.total || 0);
             } else {
                 setResults([]);
                 setTotalCount(0);
@@ -127,8 +129,8 @@ const SearchPage: React.FC = () => {
                                     key={field}
                                     onClick={() => setSearchField(field)}
                                     className={`flex-1 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all ${searchField === field
-                                            ? 'bg-white text-primary-600 shadow-sm border border-slate-100'
-                                            : 'text-text-muted hover:text-text-secondary'
+                                        ? 'bg-white text-primary-600 shadow-sm border border-slate-100'
+                                        : 'text-text-muted hover:text-text-secondary'
                                         }`}
                                 >
                                     {field === 'both' ? 'Todos' : field}
@@ -152,8 +154,8 @@ const SearchPage: React.FC = () => {
                                         }}
                                     />
                                     <div className={`w-4 h-4 rounded-md border-2 flex-shrink-0 transition-all flex items-center justify-center ${selectedStatus.includes(status)
-                                            ? 'bg-primary-500 border-primary-500 shadow-md shadow-primary-200'
-                                            : 'bg-white border-slate-200 group-hover:border-primary-300'
+                                        ? 'bg-primary-500 border-primary-500 shadow-md shadow-primary-200'
+                                        : 'bg-white border-slate-200 group-hover:border-primary-300'
                                         }`}>
                                         {selectedStatus.includes(status) && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
                                     </div>
