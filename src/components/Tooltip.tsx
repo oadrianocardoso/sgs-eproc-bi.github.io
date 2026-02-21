@@ -12,19 +12,19 @@ const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
 
     return (
         <div
-            className="relative flex items-center h-full w-full overflow-hidden"
+            className="w-full h-full"
             onMouseEnter={() => setIsVisible(true)}
             onMouseLeave={() => setIsVisible(false)}
         >
-            <div className="truncate w-full">
+            <div className="truncate">
                 {children}
             </div>
 
             {isVisible && (
-                <div className="fixed z-50 px-3 py-2 text-xs font-medium text-white bg-slate-900 rounded-lg shadow-xl pointer-events-none max-w-lg break-words animate-in fade-in zoom-in duration-200"
+                <div className="fixed z-50 px-3 py-2 text-xs font-semibold text-white bg-slate-900 rounded-lg shadow-xl pointer-events-none max-w-xl break-words animate-in fade-in zoom-in duration-200"
                     style={{
                         transform: 'translateY(-100%)',
-                        marginTop: '-8px'
+                        marginTop: '-12px'
                     }}
                 >
                     {text}

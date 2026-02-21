@@ -245,22 +245,22 @@ const SearchPage: React.FC = () => {
                                         <tr key={ticket.id}>
                                             <td className="sticky left-0 bg-white font-bold text-primary-600 border-r border-slate-50 z-10 p-4 pl-8">#{ticket.id}</td>
                                             <td className="text-text-secondary whitespace-nowrap">{ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="font-semibold text-text-primary uppercase truncate max-w-[200px]">
+                                            <td className="font-semibold text-text-primary uppercase">
                                                 <Tooltip text={ticket.solicitado_para}>
                                                     {ticket.solicitado_para}
                                                 </Tooltip>
                                             </td>
-                                            <td className="text-text-muted uppercase truncate max-w-[200px]">
+                                            <td className="text-text-muted uppercase">
                                                 <Tooltip text={ticket.grupo_responsavel}>
                                                     {ticket.grupo_responsavel}
                                                 </Tooltip>
                                             </td>
-                                            <td className="font-bold text-text-primary uppercase truncate max-w-[200px]">
+                                            <td className="font-bold text-text-primary uppercase">
                                                 <Tooltip text={ticket.designado_especialista || '-'}>
                                                     {ticket.designado_especialista || '-'}
                                                 </Tooltip>
                                             </td>
-                                            <td className="text-text-muted uppercase truncate max-w-[200px]">
+                                            <td className="text-text-muted uppercase">
                                                 <Tooltip text={ticket.grupo_especialistas || '-'}>
                                                     {ticket.grupo_especialistas || '-'}
                                                 </Tooltip>
@@ -269,19 +269,19 @@ const SearchPage: React.FC = () => {
                                             <td><StatusBadge status={ticket.status} /></td>
                                             <td><span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span></td>
                                             <td className="text-text-secondary whitespace-nowrap">{ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}</td>
-                                            <td className="text-[13px] leading-relaxed text-text-secondary pr-10">
+                                            <td className="text-[13px] text-text-secondary">
                                                 <Tooltip text={ticket.descricao?.replace(/<[^>]*>/g, '') || ''}>
-                                                    <div dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.descricao) }} />
+                                                    <span dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.descricao) }} />
                                                 </Tooltip>
                                             </td>
-                                            <td className="text-[13px] leading-relaxed text-emerald-700 pr-10">
+                                            <td className="text-[13px] text-emerald-700">
                                                 <Tooltip text={ticket.solucao?.replace(/<[^>]*>/g, '') || ''}>
-                                                    <div dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.solucao) }} />
+                                                    <span dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.solucao) }} />
                                                 </Tooltip>
                                             </td>
-                                            <td className="text-[13px] leading-relaxed text-text-muted pr-10">
+                                            <td className="text-[13px] text-text-muted">
                                                 <Tooltip text={ticket.comentarios?.replace(/<[^>]*>/g, '') || ''}>
-                                                    <div dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.comentarios) }} />
+                                                    <span dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.comentarios) }} />
                                                 </Tooltip>
                                             </td>
                                         </tr>
