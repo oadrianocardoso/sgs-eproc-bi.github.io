@@ -8,7 +8,7 @@ import Tooltip from '../components/Tooltip';
 
 interface Chamado {
     id: string;
-    hora_criacao: string;
+    created_at: string;
     solicitado_para: string;
     descricao: string;
     solucao: string;
@@ -245,8 +245,8 @@ const SearchPage: React.FC = () => {
                                                 </Tooltip>
                                             </td>
                                             <td className="text-text-secondary">
-                                                <Tooltip text={ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}>
-                                                    {ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}
+                                                <Tooltip text={ticket.created_at ? new Date(ticket.created_at).toLocaleString('pt-BR') : '-'}>
+                                                    {ticket.created_at ? new Date(ticket.created_at).toLocaleString('pt-BR') : '-'}
                                                 </Tooltip>
                                             </td>
                                             <td className="font-semibold text-text-primary uppercase">

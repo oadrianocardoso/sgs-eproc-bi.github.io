@@ -75,7 +75,7 @@ const Layout: React.FC = () => {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-8 max-w-[1600px] w-full mx-auto">
+                <div className="p-8 w-full flex-1">
                     <Outlet />
                 </div>
 
