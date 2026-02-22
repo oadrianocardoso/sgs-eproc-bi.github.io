@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Search as SearchIcon, Download, RefreshCw, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
@@ -20,6 +21,7 @@ interface Chamado {
 }
 
 const SearchPage: React.FC = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [results, setResults] = useState<Chamado[]>([]);
     const [totalCount, setTotalCount] = useState(0);
@@ -230,7 +232,11 @@ const SearchPage: React.FC = () => {
                                     ))
                                 ) : results.length > 0 ? (
                                     results.map((ticket) => (
-                                        <tr key={ticket.id} className="cursor-pointer">
+                                        <tr
+                                            key={ticket.id}
+                                            className="cursor-pointer hover:bg-slate-50 transition-colors"
+                                            onClick={() => navigate(`/ticket/${ticket.id}`)}
+                                        >
                                             <td className="sticky-col pl-8">
                                                 <Tooltip text={`#${ticket.id}`}>
                                                     #{ticket.id}

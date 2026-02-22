@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 const DashboardPage = React.lazy(() => import('./pages/StatsPage'));
 const SearchPage = React.lazy(() => import('./pages/SearchPage'));
 const UploadPage = React.lazy(() => import('./pages/UploadPage'));
+const TicketDetailsPage = React.lazy(() => import('./pages/TicketDetailsPage'));
 
 const App: React.FC = () => {
   return (
@@ -33,6 +34,14 @@ const App: React.FC = () => {
             element={
               <React.Suspense fallback={<div className="flex items-center justify-center h-full">Carregando Upload...</div>}>
                 <UploadPage />
+              </React.Suspense>
+            }
+          />
+          <Route
+            path="/ticket/:id"
+            element={
+              <React.Suspense fallback={<div className="flex items-center justify-center h-full">Carregando Chamado...</div>}>
+                <TicketDetailsPage />
               </React.Suspense>
             }
           />
