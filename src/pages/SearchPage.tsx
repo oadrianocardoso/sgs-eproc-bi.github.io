@@ -8,6 +8,7 @@ import Tooltip from '../components/Tooltip';
 
 interface Chamado {
     id: string;
+    hora_criacao: string;
     solicitado_para: string;
     descricao: string;
     solucao: string;
@@ -209,15 +210,16 @@ const SearchPage: React.FC = () => {
                             <thead>
                                 <tr>
                                     <th className="sticky-col">ID</th>
+                                    <th>Criação</th>
                                     <th>Solicitante</th>
-                                    <th>Especialista</th>
                                     <th>Grupo Especialista</th>
-                                    <th>Operacional</th>
-                                    <th>Status Final</th>
-                                    <th>Conclusão</th>
+                                    <th>Especialista</th>
                                     <th>Descrição</th>
                                     <th>Solução</th>
                                     <th>Observações</th>
+                                    <th>Conclusão</th>
+                                    <th>Operacional</th>
+                                    <th>Status Final</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -242,14 +244,14 @@ const SearchPage: React.FC = () => {
                                                     #{ticket.id}
                                                 </Tooltip>
                                             </td>
+                                            <td className="text-text-secondary">
+                                                <Tooltip text={ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}>
+                                                    {ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}
+                                                </Tooltip>
+                                            </td>
                                             <td className="font-semibold text-text-primary uppercase">
                                                 <Tooltip text={ticket.solicitado_para}>
                                                     {ticket.solicitado_para}
-                                                </Tooltip>
-                                            </td>
-                                            <td className="font-bold text-text-primary uppercase">
-                                                <Tooltip text={ticket.designado_especialista || '-'}>
-                                                    {ticket.designado_especialista || '-'}
                                                 </Tooltip>
                                             </td>
                                             <td className="text-text-muted uppercase">
@@ -257,19 +259,9 @@ const SearchPage: React.FC = () => {
                                                     {ticket.grupo_especialistas || '-'}
                                                 </Tooltip>
                                             </td>
-                                            <td>
-                                                <Tooltip text={ticket.status_operacional || '-'}>
-                                                    <span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{ticket.status_operacional}</span>
-                                                </Tooltip>
-                                            </td>
-                                            <td>
-                                                <Tooltip text={ticket.status || '-'}>
-                                                    <StatusBadge status={ticket.status} />
-                                                </Tooltip>
-                                            </td>
-                                            <td className="text-text-secondary">
-                                                <Tooltip text={ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}>
-                                                    {ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}
+                                            <td className="font-bold text-text-primary uppercase">
+                                                <Tooltip text={ticket.designado_especialista || '-'}>
+                                                    {ticket.designado_especialista || '-'}
                                                 </Tooltip>
                                             </td>
                                             <td className="text-[13px] text-text-secondary">
@@ -285,6 +277,21 @@ const SearchPage: React.FC = () => {
                                             <td className="text-[13px] text-text-muted">
                                                 <Tooltip text={ticket.comentarios?.replace(/<[^>]*>/g, '') || ''}>
                                                     <span dangerouslySetInnerHTML={{ __html: sanitizeTicketHtml(ticket.comentarios) }} />
+                                                </Tooltip>
+                                            </td>
+                                            <td className="text-text-secondary">
+                                                <Tooltip text={ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}>
+                                                    {ticket.hora_fechamento ? new Date(ticket.hora_fechamento).toLocaleString('pt-BR') : '-'}
+                                                </Tooltip>
+                                            </td>
+                                            <td>
+                                                <Tooltip text={ticket.status_operacional || '-'}>
+                                                    <span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{ticket.status_operacional}</span>
+                                                </Tooltip>
+                                            </td>
+                                            <td>
+                                                <Tooltip text={ticket.status || '-'}>
+                                                    <StatusBadge status={ticket.status} />
                                                 </Tooltip>
                                             </td>
                                         </tr>
