@@ -71,16 +71,6 @@ const UploadPage: React.FC = () => {
         }
     };
 
-    const parseBrazilianDate = (dateStr: string) => {
-        if (!dateStr) return null;
-        const match = dateStr.match(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})/);
-        if (match) {
-            const [_, day, month, year, hour, minute] = match;
-            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute)).toISOString();
-        }
-        return null;
-    };
-
     const handleFileUpload = async (file: File) => {
         if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
             setStatus({ type: 'error', message: 'Tipo de arquivo inválido. Use apenas CSV.' });
@@ -100,12 +90,7 @@ const UploadPage: React.FC = () => {
                 const clean = header.trim().replace(/^[\uFEFF\u200B\u200C\u200D\u200E\u200F]+|[\uFEFF\u200B\u200C\u200D\u200E\u200F]+$/g, '').replace(/^"|"$/g, '');
                 const mapping: Record<string, string> = {
                     'ID': 'id',
-                    'Criação': 'hora_criacao',
-                    'Criação (UTC-3)': 'hora_criacao',
-                    'Status': 'status',
-                    'Status (Agrupado)': 'status_agrupado',
                     'Solicitado para': 'solicitado_para',
-                    'Grupo responsável': 'grupo_responsavel',
                     'Descrição': 'descricao',
                     'Solução': 'solucao'
                 };
@@ -144,11 +129,8 @@ const UploadPage: React.FC = () => {
 
                     const uniqueProcessedData = Array.from(uniqueDataMap.values()).map((row: any) => ({
                         id: row.id,
-                        hora_criacao: parseBrazilianDate(row.hora_criacao) || row.hora_criacao,
                         status: row.status,
-                        status_agrupado: row.status_agrupado,
                         solicitado_para: row.solicitado_para,
-                        grupo_responsavel: row.grupo_responsavel,
                         descricao: row.descricao,
                         solucao: row.solucao
                     }));

@@ -7,16 +7,13 @@ import Tooltip from '../components/Tooltip';
 
 interface Chamado {
     id: string;
-    hora_criacao: string;
     solicitado_para: string;
-    grupo_responsavel: string;
     descricao: string;
     solucao: string;
     status: string;
     designado_especialista: string;
     grupo_especialistas: string;
     status_operacional: string;
-    status_agrupado: string;
     hora_fechamento: string;
     comentarios: string;
     total_count?: number;
@@ -33,13 +30,11 @@ const SearchPage: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchField, setSearchField] = useState<'both' | 'descricao' | 'solucao'>('both');
     const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-    const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
     const [hasSolution, setHasSolution] = useState<boolean | null>(null);
 
     // Metadata for filters
-    const [metadata, setMetadata] = useState<{ status: string[], groups: string[] }>({
-        status: [],
-        groups: []
+    const [metadata, setMetadata] = useState<{ status: string[] }>({
+        status: []
     });
 
     useEffect(() => {
@@ -49,12 +44,10 @@ const SearchPage: React.FC = () => {
 
     const fetchMetadata = async () => {
         const { data: statusData } = await supabase.from('chamados').select('status').not('status', 'is', null);
-        const { data: groupData } = await supabase.from('chamados').select('grupo_responsavel').not('grupo_responsavel', 'is', null);
 
-        if (statusData && groupData) {
+        if (statusData) {
             const uniqueStatus = Array.from(new Set(statusData.map(i => i.status))).sort();
-            const uniqueGroups = Array.from(new Set(groupData.map(i => i.grupo_responsavel))).sort();
-            setMetadata({ status: uniqueStatus, groups: uniqueGroups });
+            setMetadata({ status: uniqueStatus });
         }
     };
 
@@ -65,7 +58,6 @@ const SearchPage: React.FC = () => {
                 search_query: searchQuery || '',
                 search_field: searchField,
                 status_filter: selectedStatus.length > 0 ? selectedStatus : null,
-                grupo_filter: selectedGroups.length > 0 ? selectedGroups : null,
                 has_solution: hasSolution === null ? 'todos' : (hasSolution ? 'com' : 'sem'),
                 page_number: page + 1,
                 page_size: pageSize,
@@ -93,7 +85,6 @@ const SearchPage: React.FC = () => {
         setSearchQuery('');
         setSearchField('both');
         setSelectedStatus([]);
-        setSelectedGroups([]);
         setHasSolution(null);
         setPage(0);
         executeSearch();
@@ -216,14 +207,11 @@ const SearchPage: React.FC = () => {
                             <thead>
                                 <tr>
                                     <th className="sticky-col">ID</th>
-                                    <th>Criação</th>
                                     <th>Solicitante</th>
-                                    <th>Grupo Principal</th>
                                     <th>Especialista</th>
                                     <th>Grupo Especialista</th>
                                     <th>Operacional</th>
                                     <th>Status Final</th>
-                                    <th>Agrupado</th>
                                     <th>Conclusão</th>
                                     <th>Descrição</th>
                                     <th>Solução</th>
@@ -248,19 +236,9 @@ const SearchPage: React.FC = () => {
                                                     #{ticket.id}
                                                 </Tooltip>
                                             </td>
-                                            <td className="text-text-secondary">
-                                                <Tooltip text={ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}>
-                                                    {ticket.hora_criacao ? new Date(ticket.hora_criacao).toLocaleString('pt-BR') : '-'}
-                                                </Tooltip>
-                                            </td>
                                             <td className="font-semibold text-text-primary uppercase">
                                                 <Tooltip text={ticket.solicitado_para}>
                                                     {ticket.solicitado_para}
-                                                </Tooltip>
-                                            </td>
-                                            <td className="text-text-muted uppercase">
-                                                <Tooltip text={ticket.grupo_responsavel}>
-                                                    {ticket.grupo_responsavel}
                                                 </Tooltip>
                                             </td>
                                             <td className="font-bold text-text-primary uppercase">
@@ -281,11 +259,6 @@ const SearchPage: React.FC = () => {
                                             <td>
                                                 <Tooltip text={ticket.status || '-'}>
                                                     <StatusBadge status={ticket.status} />
-                                                </Tooltip>
-                                            </td>
-                                            <td>
-                                                <Tooltip text={ticket.status_agrupado || '-'}>
-                                                    <span className="text-[10px] font-bold px-2 py-1 bg-primary-50 text-primary-600 rounded">{ticket.status_agrupado}</span>
                                                 </Tooltip>
                                             </td>
                                             <td className="text-text-secondary">
